@@ -27,8 +27,6 @@ async function getPage(
         `https://cosen.se/api/pages/${projectName}/${pageName}`,
       ).catch(() => null);
 
-  // const page = await response.json();
-  // return page as GetPageResponse;
   if (!response) {
     return null;
   }
@@ -40,15 +38,22 @@ function toReadablePage(page: GetPageResponse): {
   title: string;
   description: string;
 } {
-  const description = `
-${page.descriptions.join("\n")}
+  const titleAndDescription = `
+${page.title}
+---
 
-## 関連するページのタイトル
+${page.descriptions.join("\n")}
+`;
+
+  const relatedPages =
+    page.links.length > 0
+      ? `## 関連するページのタイトル
 ${page.links.join("\n")}
-  `;
+`
+      : "";
   return {
     title: page.title,
-    description,
+    description: titleAndDescription + "\n" + relatedPages,
   };
 }
 
