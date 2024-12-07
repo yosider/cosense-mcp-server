@@ -15,6 +15,7 @@ const projectName: string | undefined = process.env.COSENSE_PROJECT_NAME;
 if (!projectName) {
   throw new Error("COSENSE_PROJECT_NAME is not set");
 }
+
 const resources = await listPages(projectName, cosenseSid).then((pages) =>
   pages.pages.map((page) => ({
     uri: `cosense:///${page.title}`,
@@ -85,7 +86,17 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
     tools: [
       {
         name: "get_page",
-        description: "Get a page",
+        description: `
+        Get a page from ${projectName} project on cosen.se
+
+        In cosense, a page is a cosense-style document with a title and a description.
+        Bracket Notation makes links between pages.
+        Example: [Page Title]
+        -> "/${projectName}/Page Title"
+
+        A page may have links to other pages.
+        Links are rendered at the bottom of the page.
+        `,
         inputSchema: {
           type: "object",
           properties: {
@@ -99,7 +110,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
       },
       {
         name: "list_pages",
-        description: "List known cosense pages",
+        description: `List known cosense pages from ${projectName} project on cosen.se`,
         inputSchema: {
           type: "object",
           properties: {},
