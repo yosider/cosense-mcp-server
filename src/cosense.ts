@@ -4,7 +4,9 @@
 type GetPageResponse = {
   id: string;
   title: string;
-  descriptions: string[];
+  lines: {
+    text: string;
+  }[];
   links: string[];
   relatedPages: {
     links1hop: {
@@ -42,7 +44,7 @@ function toReadablePage(page: GetPageResponse): {
 ${page.title}
 ---
 
-${page.descriptions.join("\n")}
+${page.lines.map((line) => line.text).join("\n")}
 `;
 
   const relatedPages =
