@@ -4,9 +4,7 @@ MCP server for [cosense](https://cosen.se)
 
 ## Features
 
-- Resources representing text notes with URIs and metadata
-- Tools for creating new notes
-- Prompts for generating summaries of notes
+- Get Page
 
 ## Development
 
@@ -30,20 +28,35 @@ npm run watch
 
 ## Installation
 
+```bash
+git clone https://github.com/funwarioisii/cosense-mcp-server.git
+cd cosense-mcp-server
+npm run install
+npm run build
+```
+
 To use with Claude Desktop, add the server config:
 
-On MacOS: `~/Library/Application Support/Claude/claude_desktop_config.json`
+On MacOS: `~/Library/Application\ Support/Claude/claude_desktop_config.json`
 On Windows: `%APPDATA%/Claude/claude_desktop_config.json`
 
 ```json
 {
   "mcpServers": {
     "cosense-mcp-server": {
-      "command": "/path/to/cosense-mcp-server/build/index.js"
+      "command": "node",
+      "args": ["/path/to/cosense-mcp-server/build/index.js"],
+      "env": {
+        "COSENSE_PROJECT_NAME": "your_project_name",
+        "COSENSE_SID": "your_sid"
+      }
     }
   }
 }
 ```
+
+`COSENSE_SID` is optional.
+If you want to use this server towards a private project, you need to set `COSENSE_SID`.
 
 ### Debugging
 
