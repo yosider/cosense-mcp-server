@@ -34,7 +34,8 @@ export class Handlers {
       name: page.title,
       description: `A text page: ${page.title}`,
     }));
-    console.info(`Found ${this.resources.length} resources`);
+    // output to stderr to avoid conflict with StdioServerTransport
+    console.error(`Found ${this.resources.length} resources`);
   }
 
   async handleListResources() {
