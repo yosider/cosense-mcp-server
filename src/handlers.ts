@@ -1,11 +1,11 @@
-import { getPage } from "@cosense/std/rest";
+import { getPage, listPages } from "@cosense/std/rest";
 import {
     CallToolRequestSchema,
     ReadResourceRequestSchema,
     Resource
 } from "@modelcontextprotocol/sdk/types.js";
 import { Config } from "./config.js";
-import { listPages, toReadablePage } from "./cosense.js";
+import { toReadablePage } from "./cosense.js";
 
 export class Handlers {
   private resources: Resource[] = [];
@@ -13,8 +13,16 @@ export class Handlers {
   constructor(private config: Config) {}
 
   async initialize() {
-    const pages = await listPages(this.config.projectName, this.config.cosenseSid);
-    this.resources = pages.pages.map((page) => ({
+    const pagesResult = await listPages(this.config.projectName, {
+      hostName: "cosen.se",
+      sid: this.config.cosenseSid
+    });
+    
+    if (!pagesResult.ok) {
+      throw new Error("Failed to list pages");
+    }
+
+    this.resources = pagesResult.val.pages.map((page) => ({
       uri: `cosense:///${page.title}`,
       mimeType: "text/plain",
       name: page.title,

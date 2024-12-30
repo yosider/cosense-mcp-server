@@ -23,29 +23,5 @@ ${page.links.join("\n")}
   };
 }
 
-// /api/pages/:projectname
-type ListPagesResponse = {
-  limit: number;
-  count: number;
-  skip: number;
-  projectName: string;
-  pages: {
-    title: string;
-  }[];
-};
-
-async function listPages(
-  projectName: string,
-  sid?: string,
-): Promise<ListPagesResponse> {
-  const response = sid
-    ? await fetch(`https://cosen.se/api/pages/${projectName}`, {
-        headers: { Cookie: `connect.sid=${sid}` },
-      })
-    : await fetch(`https://cosen.se/api/pages/${projectName}`);
-  const pages = await response.json();
-  return pages as ListPagesResponse;
-}
-
-export { getPage, listPages, toReadablePage };
+export { toReadablePage };
 
