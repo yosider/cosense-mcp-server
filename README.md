@@ -1,6 +1,6 @@
 # cosense-mcp-server MCP Server
 
-MCP server for [cosense](https://cosen.se)
+MCP server for [cosense](https://cosen.se)  
 Forked from Forked from https://github.com/funwarioisii/cosense-mcp-server
 
 ## Features
