@@ -8,8 +8,11 @@ import {
   ListToolsRequestSchema,
   ReadResourceRequestSchema,
 } from "@modelcontextprotocol/sdk/types.js";
+import dotenv from "dotenv";
 import { getConfig } from "./config.js";
 import { Handlers } from "./handlers.js";
+
+dotenv.config();
 
 async function main() {
   const config = getConfig();
