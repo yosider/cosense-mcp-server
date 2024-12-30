@@ -4,6 +4,7 @@ import {
     ReadResourceRequestSchema,
     Resource
 } from "@modelcontextprotocol/sdk/types.js";
+import { isErr, unwrapOk } from "option-t/PlainResult";
 import { Config } from "./config.js";
 import { toReadablePage } from "./cosense.js";
 
@@ -23,11 +24,11 @@ export class Handlers {
       this.cosenseOptions,
     );
     
-    if (!pagesResult.ok) {
+    if (isErr(pagesResult)) {
       throw new Error("Failed to list pages");
     }
 
-    this.resources = pagesResult.val.pages.map((page) => ({
+    this.resources = unwrapOk(pagesResult).pages.map((page) => ({
       uri: `cosense:///${page.title}`,
       mimeType: "text/plain",
       name: page.title,
@@ -53,12 +54,12 @@ export class Handlers {
         title,
         this.cosenseOptions,
       );
-      
-      if (!getPageResult.ok) {
+        
+      if (isErr(pageResult)) {
         throw new Error(`Page ${title} not found`);
       }
-      
-      const readablePage = toReadablePage(getPageResult.val);
+
+      const readablePage = toReadablePage(unwrapOk(pageResult));
       page = {
         uri: request.params.uri,
         mimeType: "text/plain",
@@ -129,11 +130,11 @@ export class Handlers {
           this.cosenseOptions
         );
         
-        if (!pageResult.ok) {
+        if (isErr(pageResult)) {
           throw new Error(`Page ${pageTitle} not found`);
         }
         
-        const readablePage = toReadablePage(pageResult.val);
+        const readablePage = toReadablePage(unwrapOk(pageResult));
 
         return {
           content: [
