@@ -27,6 +27,7 @@
     "option-t": "^39.0.3"
   },
   "devDependencies": {
+    "@cosense/types": "npm:@jsr/cosense__types@^0.10.4",
     "@types/node": "^20.17.10",
     "@typescript-eslint/eslint-plugin": "^8.18.2",
     "@typescript-eslint/parser": "^8.18.2",
