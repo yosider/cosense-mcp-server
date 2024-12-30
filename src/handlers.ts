@@ -9,14 +9,19 @@ import { toReadablePage } from "./cosense.js";
 
 export class Handlers {
   private resources: Resource[] = [];
+  private cosenseOptions: { sid?: string };
 
-  constructor(private config: Config) {}
+  constructor(private config: Config) {
+    this.cosenseOptions = {
+      sid: this.config.cosenseSid
+    };
+  }
 
   async initialize() {
-    const pagesResult = await listPages(this.config.projectName, {
-      hostName: "cosen.se",
-      sid: this.config.cosenseSid
-    });
+    const pagesResult = await listPages(
+      this.config.projectName,
+      this.cosenseOptions,
+    );
     
     if (!pagesResult.ok) {
       throw new Error("Failed to list pages");
@@ -43,9 +48,11 @@ export class Handlers {
     let page = this.resources.find((resource) => resource.uri === request.params.uri);
 
     if (!page) {
-      const getPageResult = await getPage(this.config.projectName, title, {
-        hostName: "cosen.se"
-      });
+      const pageResult = await getPage(
+        this.config.projectName,
+        title,
+        this.cosenseOptions,
+      );
       
       if (!getPageResult.ok) {
         throw new Error(`Page ${title} not found`);
@@ -116,9 +123,11 @@ export class Handlers {
     switch (request.params.name) {
       case "get_page": {
         const pageTitle = String(request.params.arguments?.pageTitle);
-        const pageResult = await getPage(this.config.projectName, pageTitle, {
-          hostName: "cosen.se"
-        });
+        const pageResult = await getPage(
+          this.config.projectName,
+          pageTitle,
+          this.cosenseOptions
+        );
         
         if (!pageResult.ok) {
           throw new Error(`Page ${pageTitle} not found`);
