@@ -18,7 +18,7 @@
     "lint": "eslint . --ext .ts",
     "lint:fix": "eslint . --ext .ts --fix",
     "format": "prettier --write \"src/**/*.ts\"",
-    "start": "node --loader ts-node/esm src/index.ts"
+    "start": "tsx src/index.ts",
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "0.6.0"
@@ -31,6 +31,7 @@
     "eslint-config-prettier": "^9.1.0",
     "prettier": "^3.4.2",
     "ts-node": "^10.9.2",
+    "tsx": "^4.19.2",
     "typescript": "^5.7.2"
   }
 }
