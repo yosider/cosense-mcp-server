@@ -4,7 +4,7 @@
     {
       "type": "node",
       "request": "launch",
-      "name": "Inspector",
+      "name": "npm run start",
       "skipFiles": ["<node_internals>/**"],
       "runtimeExecutable": "npm",
       "runtimeArgs": ["run", "start"],
