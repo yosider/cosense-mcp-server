@@ -1,10 +1,11 @@
+import { getPage } from "@cosense/std/rest";
 import {
     CallToolRequestSchema,
     ReadResourceRequestSchema,
     Resource
 } from "@modelcontextprotocol/sdk/types.js";
 import { Config } from "./config.js";
-import { getPage, listPages, toReadablePage } from "./cosense.js";
+import { listPages, toReadablePage } from "./cosense.js";
 
 export class Handlers {
   private resources: Resource[] = [];
@@ -34,15 +35,15 @@ export class Handlers {
     let page = this.resources.find((resource) => resource.uri === request.params.uri);
 
     if (!page) {
-      const getPageResult = await getPage(
-        this.config.projectName,
-        title,
-        this.config.cosenseSid
-      );
-      if (!getPageResult) {
+      const getPageResult = await getPage(this.config.projectName, title, {
+        hostName: "cosen.se"
+      });
+      
+      if (!getPageResult.ok) {
         throw new Error(`Page ${title} not found`);
       }
-      const readablePage = toReadablePage(getPageResult);
+      
+      const readablePage = toReadablePage(getPageResult.val);
       page = {
         uri: request.params.uri,
         mimeType: "text/plain",
@@ -107,15 +108,15 @@ export class Handlers {
     switch (request.params.name) {
       case "get_page": {
         const pageTitle = String(request.params.arguments?.pageTitle);
-        const page = await getPage(
-          this.config.projectName,
-          pageTitle,
-          this.config.cosenseSid
-        );
-        if (!page) {
+        const pageResult = await getPage(this.config.projectName, pageTitle, {
+          hostName: "cosen.se"
+        });
+        
+        if (!pageResult.ok) {
           throw new Error(`Page ${pageTitle} not found`);
         }
-        const readablePage = toReadablePage(page);
+        
+        const readablePage = toReadablePage(pageResult.val);
 
         return {
           content: [

@@ -14,14 +14,17 @@
     "build": "tsc && node -e \"require('fs').chmodSync('build/index.js', '755')\"",
     "prepare": "npm run build",
     "watch": "tsc --watch",
-    "inspector": "npx @modelcontextprotocol/inspector build/index.js",
     "lint": "eslint . --ext .ts",
     "lint:fix": "eslint . --ext .ts --fix",
     "format": "prettier --write \"src/**/*.ts\"",
     "start": "tsx src/index.ts",
+    "inspect": "npx @modelcontextprotocol/inspector tsx src/index.ts"
   },
   "dependencies": {
+    "@cosense/std": "npm:@jsr/cosense__std@^0.29.3",
+    "@modelcontextprotocol/sdk": "0.6.0",
     "dotenv": "^16.4.7",
+    "option-t": "^39.0.3"
   },
   "devDependencies": {
     "@types/node": "^20.17.10",
