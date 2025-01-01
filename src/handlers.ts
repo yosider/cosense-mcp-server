@@ -2,14 +2,14 @@ import { getPage, listPages } from "@cosense/std/rest";
 import {
     CallToolRequestSchema,
     ReadResourceRequestSchema,
-    Resource
 } from "@modelcontextprotocol/sdk/types.js";
-import { isErr, unwrapOk } from "option-t/PlainResult";
+import { isErr, unwrapErr, unwrapOk } from "option-t/PlainResult";
 import { Config } from "./config.js";
 import { toReadablePage } from "./cosense.js";
+import { PageResources } from "./page-resources.js";
 
 export class Handlers {
-  private resources: Resource[] = [];
+  private pageResources: PageResources = new PageResources();
   private cosenseOptions: { sid?: string };
 
   constructor(private config: Config) {
@@ -25,31 +25,30 @@ export class Handlers {
     );
     
     if (isErr(pagesResult)) {
-      throw new Error("Failed to list pages");
+      throw new Error(`Failed to list pages: ${pagesResult.err}`);
     }
 
-    this.resources = unwrapOk(pagesResult).pages.map((page) => ({
-      uri: `cosense:///${page.title}`,
-      mimeType: "text/plain",
-      name: page.title,
-      description: `A text page: ${page.title}`,
-    }));
+    unwrapOk(pagesResult).pages.forEach(page => {
+      this.pageResources.add(page);
+    });
     // output to stderr to avoid conflict with StdioServerTransport
-    console.error(`Found ${this.resources.length} resources`);
+    console.error(`Found ${this.pageResources.count} resources`);
   }
 
   async handleListResources() {
     return {
-      resources: this.resources,
+      resources: this.pageResources.getAll(),
     };
   }
 
   async handleReadResource(request: typeof ReadResourceRequestSchema._type) {
     const url = new URL(request.params.uri);
     const title = url.pathname.replace(/^\//, "");
-    let page = this.resources.find((resource) => resource.uri === request.params.uri);
+    let resource = this.pageResources.findByUri(request.params.uri);
 
-    if (!page) {
+    // if the resource is not found, get it from cosense
+    // TODO
+    if (!resource) {
       const pageResult = await getPage(
         this.config.projectName,
         title,
@@ -57,17 +56,10 @@ export class Handlers {
       );
         
       if (isErr(pageResult)) {
-        throw new Error(`Page ${title} not found`);
+        throw new Error(`Page ${title} not found: ${unwrapErr(pageResult)}`);
       }
 
-      const readablePage = toReadablePage(unwrapOk(pageResult));
-      page = {
-        uri: request.params.uri,
-        mimeType: "text/plain",
-        name: readablePage.title,
-        description: readablePage.description,
-      };
-      this.resources.push(page);
+      resource = this.pageResources.add(unwrapOk(pageResult));
     }
 
     return {
@@ -75,7 +67,7 @@ export class Handlers {
         {
           uri: request.params.uri,
           mimeType: "text/plain",
-          text: page.description,
+          text: resource.description,
         },
       ],
     };
@@ -132,7 +124,7 @@ export class Handlers {
         );
         
         if (isErr(pageResult)) {
-          throw new Error(`Page ${pageTitle} not found`);
+          throw new Error(`Page ${pageTitle} not found: ${unwrapErr(pageResult)}`);
         }
         
         const readablePage = toReadablePage(unwrapOk(pageResult));
@@ -152,14 +144,14 @@ export class Handlers {
           content: [
             {
               type: "text",
-              text: this.resources.map((resource) => resource.name).join("\n"),
+              text: this.pageResources.getNames(),
             },
           ],
         };
       }
 
       default:
-        throw new Error("Unknown tool");
+        throw new Error(`Unknown tool: ${request.params.name}`);
     }
   }
 }
