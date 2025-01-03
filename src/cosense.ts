@@ -34,7 +34,11 @@ export async function getPage(
   options: { sid?: string } = {}
 ): Promise<Page> {
   const result = await _getPage(projectName, title, options);
-  return unwrap(result);
+  const page = unwrap(result);
+  if (page === null) {
+    throw new Error('Failed to get page');
+  }
+  return page;
 }
 
 export async function listPages(
@@ -42,7 +46,11 @@ export async function listPages(
   options: { sid?: string } = {}
 ): Promise<PageList> {
   const result = await _listPages(projectName, options);
-  return unwrap(result);
+  const pages = unwrap(result);
+  if (pages === null) {
+    throw new Error('Failed to list pages');
+  }
+  return pages;
 }
 
 function unwrap<T>(result: Result<T, unknown>): T {
