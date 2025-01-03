@@ -18,7 +18,7 @@
     "lint:fix": "eslint . --ext .ts --fix",
     "format": "prettier --write \"src/**/*.ts\"",
     "start": "tsx src/index.ts",
-    "inspect": "npx @modelcontextprotocol/inspector tsx src/index.ts"
+    "inspect": "npx @modelcontextprotocol/inspector npm run start"
   },
   "dependencies": {
     "@cosense/std": "npm:@jsr/cosense__std@^0.29.3",
