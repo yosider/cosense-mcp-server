@@ -1,6 +1,9 @@
-import { getPage as _getPage } from '@cosense/std/rest';
-import type { Page } from '@cosense/types/rest';
-import { isErr, unwrapErr, unwrapOk } from 'option-t/PlainResult';
+import {
+  getPage as _getPage,
+  listPages as _listPages,
+} from '@cosense/std/rest';
+import type { Page, PageList } from '@cosense/types/rest';
+import { Result, isErr, unwrapErr, unwrapOk } from 'option-t/PlainResult';
 
 export function toReadablePage(page: Page): {
   title: string;
@@ -31,7 +34,18 @@ export async function getPage(
   options: { sid?: string } = {}
 ): Promise<Page> {
   const result = await _getPage(projectName, title, options);
+  return unwrap(result);
+}
 
+export async function listPages(
+  projectName: string,
+  options: { sid?: string } = {}
+): Promise<PageList> {
+  const result = await _listPages(projectName, options);
+  return unwrap(result);
+}
+
+function unwrap<T>(result: Result<T, unknown>): T {
   if (isErr(result)) {
     throw unwrapErr(result);
   }

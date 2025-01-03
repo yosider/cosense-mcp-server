@@ -1,11 +1,9 @@
-import { listPages } from '@cosense/std/rest';
 import {
   CallToolRequestSchema,
   ReadResourceRequestSchema,
 } from '@modelcontextprotocol/sdk/types.js';
-import { isErr, unwrapOk } from 'option-t/PlainResult';
 import { Config } from './config.js';
-import { getPage, toReadablePage } from './cosense.js';
+import { getPage, listPages, toReadablePage } from './cosense.js';
 import { PageResources } from './page-resources.js';
 
 export class Handlers {
@@ -19,16 +17,11 @@ export class Handlers {
   }
 
   async initialize() {
-    const pagesResult = await listPages(
+    const pageList = await listPages(
       this.config.projectName,
       this.cosenseOptions
     );
-
-    if (isErr(pagesResult)) {
-      throw new Error(`Failed to list pages: ${pagesResult.err}`);
-    }
-
-    unwrapOk(pagesResult).pages.forEach((page) => {
+    pageList.pages.forEach((page) => {
       this.pageResources.add(page);
     });
     // output to stderr to avoid conflict with StdioServerTransport
