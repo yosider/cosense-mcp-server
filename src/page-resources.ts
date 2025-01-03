@@ -1,5 +1,6 @@
-import { BasePage } from "@cosense/types/rest";
-import { Resource } from "@modelcontextprotocol/sdk/types.js";
+import { BasePage } from '@cosense/types/rest';
+import { Resource } from '@modelcontextprotocol/sdk/types.js';
+import { getPageDescription } from './cosense.js';
 
 export class PageResources {
   private resources: Resource[] = [];
@@ -7,9 +8,9 @@ export class PageResources {
   add(page: BasePage): Resource {
     const resource = {
       uri: `cosense:///${page.title}`,
-      mimeType: "text/plain",
+      mimeType: 'text/plain',
       name: page.title,
-      description: `A text page: ${page.title}`,
+      description: getPageDescription(page),
     };
     this.addResource(resource);
     return resource;
@@ -24,11 +25,11 @@ export class PageResources {
   }
 
   getAll(): Resource[] {
-    return [...this.resources];  // return a copy
+    return [...this.resources]; // return a copy
   }
 
   getNames(): string {
-    return this.resources.map((resource) => resource.name).join("\n");
+    return this.resources.map((resource) => resource.name).join('\n');
   }
 
   get count(): number {
