@@ -1,12 +1,12 @@
-import { getPage, listPages } from "@cosense/std/rest";
+import { listPages } from '@cosense/std/rest';
 import {
-    CallToolRequestSchema,
-    ReadResourceRequestSchema,
-} from "@modelcontextprotocol/sdk/types.js";
-import { isErr, unwrapErr, unwrapOk } from "option-t/PlainResult";
-import { Config } from "./config.js";
-import { toReadablePage } from "./cosense.js";
-import { PageResources } from "./page-resources.js";
+  CallToolRequestSchema,
+  ReadResourceRequestSchema,
+} from '@modelcontextprotocol/sdk/types.js';
+import { isErr, unwrapOk } from 'option-t/PlainResult';
+import { Config } from './config.js';
+import { getPage, toReadablePage } from './cosense.js';
+import { PageResources } from './page-resources.js';
 
 export class Handlers {
   private pageResources: PageResources = new PageResources();
@@ -14,21 +14,21 @@ export class Handlers {
 
   constructor(private config: Config) {
     this.cosenseOptions = {
-      sid: this.config.cosenseSid
+      sid: this.config.cosenseSid,
     };
   }
 
   async initialize() {
     const pagesResult = await listPages(
       this.config.projectName,
-      this.cosenseOptions,
+      this.cosenseOptions
     );
-    
+
     if (isErr(pagesResult)) {
       throw new Error(`Failed to list pages: ${pagesResult.err}`);
     }
 
-    unwrapOk(pagesResult).pages.forEach(page => {
+    unwrapOk(pagesResult).pages.forEach((page) => {
       this.pageResources.add(page);
     });
     // output to stderr to avoid conflict with StdioServerTransport
@@ -43,30 +43,23 @@ export class Handlers {
 
   async handleReadResource(request: typeof ReadResourceRequestSchema._type) {
     const url = new URL(request.params.uri);
-    const title = url.pathname.replace(/^\//, "");
+    const title = url.pathname.replace(/^\//, '');
     let resource = this.pageResources.findByUri(request.params.uri);
 
-    // if the resource is not found, get it from cosense
-    // TODO
     if (!resource) {
-      const pageResult = await getPage(
+      const page = await getPage(
         this.config.projectName,
         title,
-        this.cosenseOptions,
+        this.cosenseOptions
       );
-        
-      if (isErr(pageResult)) {
-        throw new Error(`Page ${title} not found: ${unwrapErr(pageResult)}`);
-      }
-
-      resource = this.pageResources.add(unwrapOk(pageResult));
+      resource = this.pageResources.add(page);
     }
 
     return {
       contents: [
         {
           uri: request.params.uri,
-          mimeType: "text/plain",
+          mimeType: 'text/plain',
           text: resource.description,
         },
       ],
@@ -77,7 +70,7 @@ export class Handlers {
     return {
       tools: [
         {
-          name: "get_page",
+          name: 'get_page',
           description: `
           Get a page from ${this.config.projectName} project on cosen.se
 
@@ -90,21 +83,21 @@ export class Handlers {
           Links are rendered at the bottom of the page.
           `,
           inputSchema: {
-            type: "object",
+            type: 'object',
             properties: {
               pageTitle: {
-                type: "string",
-                description: "Title of the page",
+                type: 'string',
+                description: 'Title of the page',
               },
             },
-            required: ["pageTitle"],
+            required: ['pageTitle'],
           },
         },
         {
-          name: "list_pages",
+          name: 'list_pages',
           description: `List known cosense pages from ${this.config.projectName} project on cosen.se`,
           inputSchema: {
-            type: "object",
+            type: 'object',
             properties: {},
             required: [],
           },
@@ -115,35 +108,30 @@ export class Handlers {
 
   async handleCallTool(request: typeof CallToolRequestSchema._type) {
     switch (request.params.name) {
-      case "get_page": {
+      case 'get_page': {
         const pageTitle = String(request.params.arguments?.pageTitle);
-        const pageResult = await getPage(
+        const page = await getPage(
           this.config.projectName,
           pageTitle,
           this.cosenseOptions
         );
-        
-        if (isErr(pageResult)) {
-          throw new Error(`Page ${pageTitle} not found: ${unwrapErr(pageResult)}`);
-        }
-        
-        const readablePage = toReadablePage(unwrapOk(pageResult));
+        const readablePage = toReadablePage(page);
 
         return {
           content: [
             {
-              type: "text",
+              type: 'text',
               text: readablePage.description,
             },
           ],
         };
       }
 
-      case "list_pages": {
+      case 'list_pages': {
         return {
           content: [
             {
-              type: "text",
+              type: 'text',
               text: this.pageResources.getNames(),
             },
           ],
