@@ -4,10 +4,10 @@ import {
 } from '@modelcontextprotocol/sdk/types.js';
 import { Config } from './config.js';
 import { getPage, listPages, toReadablePage } from './cosense.js';
-import { PageResources } from './page-resources.js';
+import { PageResource, Resources } from './resource.js';
 
 export class Handlers {
-  private pageResources: PageResources = new PageResources();
+  private resources: Resources<PageResource> = new Resources();
   private cosenseOptions: { sid?: string };
 
   constructor(private config: Config) {
@@ -22,15 +22,15 @@ export class Handlers {
       this.cosenseOptions
     );
     pageList.pages.forEach((page) => {
-      this.pageResources.add(page);
+      this.resources.add(new PageResource(page));
     });
     // output to stderr to avoid conflict with StdioServerTransport
-    console.error(`Found ${this.pageResources.count} resources`);
+    console.error(`Found ${this.resources.count} resources`);
   }
 
   async handleListResources() {
     return {
-      resources: this.pageResources.getAll(),
+      resources: this.resources.getAll(),
     };
   }
 
@@ -117,7 +117,7 @@ export class Handlers {
           content: [
             {
               type: 'text',
-              text: this.pageResources.getNames(),
+              text: this.resources.getNames(),
             },
           ],
         };
