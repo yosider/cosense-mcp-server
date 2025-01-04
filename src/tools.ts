@@ -1,4 +1,7 @@
-import { CallToolResult } from '@modelcontextprotocol/sdk/types.js';
+import {
+  CallToolResult,
+  Tool as _Tool,
+} from '@modelcontextprotocol/sdk/types.js';
 import { getPage, toReadablePage } from './cosense.js';
 import { Resources } from './resource.js';
 
@@ -8,14 +11,7 @@ export interface ToolContext {
   resources: Resources<any>;
 }
 
-export interface Tool {
-  readonly name: string;
-  readonly description: string;
-  readonly inputSchema: {
-    type: string;
-    properties: Record<string, unknown>;
-    required: string[];
-  };
+export interface Tool extends _Tool {
   execute(
     args: Record<string, unknown>,
     context: ToolContext
@@ -24,13 +20,14 @@ export interface Tool {
 
 export class GetPageTool implements Tool {
   readonly name = 'get_page';
+  [key: string]: unknown;
 
   get description() {
     return 'Get a page with the specified title from the Cosense project.';
   }
 
   readonly inputSchema = {
-    type: 'object',
+    type: 'object' as const,
     properties: {
       pageTitle: {
         type: 'string',
@@ -58,13 +55,14 @@ export class GetPageTool implements Tool {
 
 export class ListPagesTool implements Tool {
   readonly name = 'list_pages';
+  [key: string]: unknown;
 
   get description() {
     return 'List Cosense pages in the resources.';
   }
 
   readonly inputSchema = {
-    type: 'object',
+    type: 'object' as const,
     properties: {},
     required: [],
   };

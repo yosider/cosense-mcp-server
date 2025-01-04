@@ -1,6 +1,10 @@
 import {
-  CallToolRequestSchema,
-  ReadResourceRequestSchema,
+  CallToolRequest,
+  CallToolResult,
+  ListResourcesResult,
+  ListToolsResult,
+  ReadResourceRequest,
+  ReadResourceResult,
 } from '@modelcontextprotocol/sdk/types.js';
 import { Config } from './config.js';
 import { listPages } from './cosense.js';
@@ -31,13 +35,15 @@ export class Handlers {
     console.error(`Found ${this.resources.count} resources`);
   }
 
-  async handleListResources() {
+  async handleListResources(): Promise<ListResourcesResult> {
     return {
       resources: this.resources.getAll(),
     };
   }
 
-  async handleReadResource(request: typeof ReadResourceRequestSchema._type) {
+  async handleReadResource(
+    request: ReadResourceRequest
+  ): Promise<ReadResourceResult> {
     const pageResource = this.resources.findByUri(request.params.uri);
     return await pageResource.read(
       this.config.projectName,
@@ -45,7 +51,7 @@ export class Handlers {
     );
   }
 
-  async handleListTools() {
+  async handleListTools(): Promise<ListToolsResult> {
     return {
       tools: this.tools.map((tool) => ({
         name: tool.name,
@@ -55,7 +61,7 @@ export class Handlers {
     };
   }
 
-  async handleCallTool(request: typeof CallToolRequestSchema._type) {
+  async handleCallTool(request: CallToolRequest): Promise<CallToolResult> {
     const tool = this.tools.find((t) => t.name === request.params.name);
     if (!tool) {
       throw new Error(`Unknown tool: ${request.params.name}`);
