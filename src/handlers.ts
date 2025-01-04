@@ -35,22 +35,11 @@ export class Handlers {
   }
 
   async handleReadResource(request: typeof ReadResourceRequestSchema._type) {
-    const url = new URL(request.params.uri);
-    const title = decodeURIComponent(url.pathname.replace(/^\//, ''));
-    const page = await getPage(
+    const pageResource = this.resources.findByUri(request.params.uri);
+    return await pageResource.read(
       this.config.projectName,
-      title,
       this.cosenseOptions
     );
-    return {
-      contents: [
-        {
-          uri: request.params.uri,
-          mimeType: 'text/plain',
-          text: toReadablePage(page).description,
-        },
-      ],
-    };
   }
 
   async handleListTools() {

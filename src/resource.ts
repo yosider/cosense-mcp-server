@@ -1,5 +1,6 @@
 import { BasePage } from '@cosense/types/rest';
 import { Resource } from '@modelcontextprotocol/sdk/types.js';
+import { getPage, toReadablePage } from './cosense.js';
 import { formatDate } from './utils.js';
 
 export class PageResource implements Resource {
@@ -14,6 +15,19 @@ export class PageResource implements Resource {
     this.mimeType = 'text/plain';
     this.name = page.title;
     this.description = generateDescription(page);
+  }
+
+  async read(projectName: string, options?: { sid?: string }) {
+    const page = await getPage(projectName, this.name, options);
+    return {
+      contents: [
+        {
+          uri: this.uri,
+          mimeType: this.mimeType,
+          text: toReadablePage(page).description,
+        },
+      ],
+    };
   }
 }
 
@@ -38,8 +52,12 @@ export class Resources<T extends Resource> {
     return resource;
   }
 
-  findByUri(uri: string): T | undefined {
-    return this.resources.find((resource) => resource.uri === uri);
+  findByUri(uri: string): T {
+    const resource = this.resources.find((resource) => resource.uri === uri);
+    if (!resource) {
+      throw new Error(`Resource not found: ${uri}`);
+    }
+    return resource;
   }
 
   getAll(): T[] {
