@@ -1,0 +1,85 @@
+import { CallToolResult } from '@modelcontextprotocol/sdk/types.js';
+import { getPage, toReadablePage } from './cosense.js';
+import { Resources } from './resource.js';
+
+export interface ToolContext {
+  projectName: string;
+  cosenseOptions: { sid?: string };
+  resources: Resources<any>;
+}
+
+export interface Tool {
+  readonly name: string;
+  readonly description: string;
+  readonly inputSchema: {
+    type: string;
+    properties: Record<string, unknown>;
+    required: string[];
+  };
+  execute(
+    args: Record<string, unknown>,
+    context: ToolContext
+  ): Promise<CallToolResult>;
+}
+
+export class GetPageTool implements Tool {
+  readonly name = 'get_page';
+
+  get description() {
+    return 'Get a page with the specified title from the Cosense project.';
+  }
+
+  readonly inputSchema = {
+    type: 'object',
+    properties: {
+      pageTitle: {
+        type: 'string',
+        description: 'Title of the page',
+      },
+    },
+    required: ['pageTitle'],
+  };
+
+  async execute(
+    { pageTitle }: { pageTitle: string },
+    { projectName, cosenseOptions }: ToolContext
+  ): Promise<CallToolResult> {
+    const page = await getPage(projectName, pageTitle, cosenseOptions);
+    return {
+      content: [
+        {
+          type: 'text',
+          text: toReadablePage(page).description,
+        },
+      ],
+    };
+  }
+}
+
+export class ListPagesTool implements Tool {
+  readonly name = 'list_pages';
+
+  get description() {
+    return 'List Cosense pages in the resources.';
+  }
+
+  readonly inputSchema = {
+    type: 'object',
+    properties: {},
+    required: [],
+  };
+
+  async execute(
+    _args: Record<string, unknown>,
+    { resources }: ToolContext
+  ): Promise<CallToolResult> {
+    return {
+      content: [
+        {
+          type: 'text',
+          text: resources.getNames().join('\n'),
+        },
+      ],
+    };
+  }
+}

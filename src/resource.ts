@@ -64,8 +64,8 @@ export class Resources<T extends Resource> {
     return [...this.resources]; // return a copy
   }
 
-  getNames(): string {
-    return this.resources.map((resource) => resource.name).join('\n');
+  getNames(): string[] {
+    return this.resources.map((resource) => resource.name);
   }
 
   get count(): number {

@@ -3,17 +3,20 @@ import {
   ReadResourceRequestSchema,
 } from '@modelcontextprotocol/sdk/types.js';
 import { Config } from './config.js';
-import { getPage, listPages, toReadablePage } from './cosense.js';
+import { listPages } from './cosense.js';
 import { PageResource, Resources } from './resource.js';
+import { GetPageTool, ListPagesTool, Tool, ToolContext } from './tools.js';
 
 export class Handlers {
   private resources: Resources<PageResource> = new Resources();
   private cosenseOptions: { sid?: string };
+  private tools: Tool[];
 
   constructor(private config: Config) {
     this.cosenseOptions = {
       sid: this.config.cosenseSid,
     };
+    this.tools = [new GetPageTool(), new ListPagesTool()];
   }
 
   async initialize() {
@@ -44,76 +47,26 @@ export class Handlers {
 
   async handleListTools() {
     return {
-      tools: [
-        {
-          name: 'get_page',
-          description: `
-          Get a page from ${this.config.projectName} project on cosen.se
-
-          In cosense, a page is a cosense-style document with a title and a description.
-          Bracket Notation makes links between pages.
-          Example: [Page Title]
-          -> "/${this.config.projectName}/Page Title"
-
-          A page may have links to other pages.
-          Links are rendered at the bottom of the page.
-          `,
-          inputSchema: {
-            type: 'object',
-            properties: {
-              pageTitle: {
-                type: 'string',
-                description: 'Title of the page',
-              },
-            },
-            required: ['pageTitle'],
-          },
-        },
-        {
-          name: 'list_pages',
-          description: `List known cosense pages from ${this.config.projectName} project on cosen.se`,
-          inputSchema: {
-            type: 'object',
-            properties: {},
-            required: [],
-          },
-        },
-      ],
+      tools: this.tools.map((tool) => ({
+        name: tool.name,
+        description: tool.description,
+        inputSchema: tool.inputSchema,
+      })),
     };
   }
 
   async handleCallTool(request: typeof CallToolRequestSchema._type) {
-    switch (request.params.name) {
-      case 'get_page': {
-        const pageTitle = String(request.params.arguments?.pageTitle);
-        const page = await getPage(
-          this.config.projectName,
-          pageTitle,
-          this.cosenseOptions
-        );
-        return {
-          content: [
-            {
-              type: 'text',
-              text: toReadablePage(page).description,
-            },
-          ],
-        };
-      }
-
-      case 'list_pages': {
-        return {
-          content: [
-            {
-              type: 'text',
-              text: this.resources.getNames(),
-            },
-          ],
-        };
-      }
-
-      default:
-        throw new Error(`Unknown tool: ${request.params.name}`);
+    const tool = this.tools.find((t) => t.name === request.params.name);
+    if (!tool) {
+      throw new Error(`Unknown tool: ${request.params.name}`);
     }
+
+    const context: ToolContext = {
+      projectName: this.config.projectName,
+      cosenseOptions: this.cosenseOptions,
+      resources: this.resources,
+    };
+
+    return await tool.execute(request.params.arguments ?? {}, context);
   }
 }
