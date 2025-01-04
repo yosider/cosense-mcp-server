@@ -1,31 +1,11 @@
-# cosense-mcp-server MCP Server
+# Cosense MCP Server
 
-MCP server for [cosense](https://cosen.se)  
-Forked from Forked from https://github.com/funwarioisii/cosense-mcp-server
+MCP server for [Cosense](https://cosen.se)  
+Forked from [funwarioisii/cosense-mcp-server](https://github.com/funwarioisii/cosense-mcp-server)
 
 ## Features
 
 - Get Page
-
-## Development
-
-Install dependencies:
-
-```bash
-npm install
-```
-
-Build the server:
-
-```bash
-npm run build
-```
-
-For development with auto-rebuild:
-
-```bash
-npm run watch
-```
 
 ## Installation
 
@@ -37,16 +17,15 @@ npm run build
 ```
 
 To use with Claude Desktop, add the server config:
-
-On MacOS: `~/Library/Application\ Support/Claude/claude_desktop_config.json`
-On Windows: `%APPDATA%/Claude/claude_desktop_config.json`
+- MacOS: `~/Library/Application\ Support/Claude/claude_desktop_config.json`
+- Windows: `%APPDATA%/Claude/claude_desktop_config.json`
 
 ```json
 {
   "mcpServers": {
     "cosense-mcp-server": {
-      "command": "node",
-      "args": ["/path/to/cosense-mcp-server/build/index.js"],
+      "command": "npx",
+      "args": ["/path/to/cosense-mcp-server"],
       "env": {
         "COSENSE_PROJECT_NAME": "your_project_name",
         "COSENSE_SID": "your_sid"
@@ -64,7 +43,7 @@ If you want to use this server towards a private project, you need to set `COSEN
 Since MCP servers communicate over stdio, debugging can be challenging. We recommend using the [MCP Inspector](https://github.com/modelcontextprotocol/inspector), which is available as a package script:
 
 ```bash
-npm run inspector
+npm run inspect
 ```
 
 The Inspector will provide a URL to access debugging tools in your browser.
