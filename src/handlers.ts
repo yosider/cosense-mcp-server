@@ -36,24 +36,18 @@ export class Handlers {
 
   async handleReadResource(request: typeof ReadResourceRequestSchema._type) {
     const url = new URL(request.params.uri);
-    const title = url.pathname.replace(/^\//, '');
-    let resource = this.pageResources.findByUri(request.params.uri);
-
-    if (!resource) {
-      const page = await getPage(
-        this.config.projectName,
-        title,
-        this.cosenseOptions
-      );
-      resource = this.pageResources.add(page);
-    }
-
+    const title = decodeURIComponent(url.pathname.replace(/^\//, ''));
+    const page = await getPage(
+      this.config.projectName,
+      title,
+      this.cosenseOptions
+    );
     return {
       contents: [
         {
           uri: request.params.uri,
           mimeType: 'text/plain',
-          text: resource.description,
+          text: toReadablePage(page).description,
         },
       ],
     };
@@ -108,13 +102,11 @@ export class Handlers {
           pageTitle,
           this.cosenseOptions
         );
-        const readablePage = toReadablePage(page);
-
         return {
           content: [
             {
               type: 'text',
-              text: readablePage.description,
+              text: toReadablePage(page).description,
             },
           ],
         };
