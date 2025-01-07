@@ -3,12 +3,12 @@ import {
   Tool as _Tool,
 } from '@modelcontextprotocol/sdk/types.js';
 import { getPage, toReadablePage } from './cosense.js';
-import { Resources } from './resource.js';
+import { PageResource, Resources } from './resource.js';
 
 export interface ToolContext {
   projectName: string;
   cosenseOptions: { sid?: string };
-  resources: Resources<any>;
+  pageResources: Resources<PageResource>;
 }
 
 export interface Tool extends _Tool {
@@ -69,13 +69,16 @@ export class ListPagesTool implements Tool {
 
   async execute(
     _args: Record<string, unknown>,
-    { resources }: ToolContext
+    { pageResources }: ToolContext
   ): Promise<CallToolResult> {
     return {
       content: [
         {
           type: 'text',
-          text: resources.getNames().join('\n'),
+          text: pageResources
+            .getAll()
+            .map((r) => r.description)
+            .join('\n-----\n'),
         },
       ],
     };

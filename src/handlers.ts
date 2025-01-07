@@ -12,7 +12,7 @@ import { PageResource, Resources } from './resource.js';
 import { GetPageTool, ListPagesTool, Tool, ToolContext } from './tools.js';
 
 export class Handlers {
-  private resources: Resources<PageResource> = new Resources();
+  private pageResources: Resources<PageResource> = new Resources();
   private cosenseOptions: { sid?: string };
   private tools: Tool[];
 
@@ -29,22 +29,22 @@ export class Handlers {
       this.cosenseOptions
     );
     pageList.pages.forEach((page) => {
-      this.resources.add(new PageResource(page));
+      this.pageResources.add(new PageResource(page));
     });
     // output to stderr to avoid conflict with StdioServerTransport
-    console.error(`Found ${this.resources.count} resources`);
+    console.error(`Found ${this.pageResources.count} resources`);
   }
 
   async handleListResources(): Promise<ListResourcesResult> {
     return {
-      resources: this.resources.getAll(),
+      resources: this.pageResources.getAll(),
     };
   }
 
   async handleReadResource(
     request: ReadResourceRequest
   ): Promise<ReadResourceResult> {
-    const pageResource = this.resources.findByUri(request.params.uri);
+    const pageResource = this.pageResources.findByUri(request.params.uri);
     return await pageResource.read(
       this.config.projectName,
       this.cosenseOptions
@@ -70,7 +70,7 @@ export class Handlers {
     const context: ToolContext = {
       projectName: this.config.projectName,
       cosenseOptions: this.cosenseOptions,
-      resources: this.resources,
+      pageResources: this.pageResources,
     };
 
     return await tool.execute(request.params.arguments ?? {}, context);
