@@ -9,7 +9,7 @@ import {
 import { Config } from './config.js';
 import { listPages } from './cosense.js';
 import { PageResource, Resources } from './resource.js';
-import { getPageTool, listPagesTool, Tool } from './tools.js';
+import { getPageTool, listPagesTool, Tool } from './tools/index.js';
 
 export class Handlers {
   private pageResources: Resources<PageResource> = new Resources();
@@ -63,12 +63,12 @@ export class Handlers {
 
   createToolContext<TContext>(tool: Tool<TContext>): TContext {
     switch (tool.name) {
-      case 'get_page':
+      case getPageTool.name:
         return {
           projectName: this.config.projectName,
           cosenseOptions: this.cosenseOptions,
         } as TContext;
-      case 'list_pages':
+      case listPagesTool.name:
         return {
           pageResources: this.pageResources,
         } as TContext;
