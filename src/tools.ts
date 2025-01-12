@@ -5,28 +5,24 @@ import {
 import { getPage, toReadablePage } from './cosense.js';
 import { PageResource, Resources } from './resource.js';
 
-export interface ToolContext {
+export interface Tool<TContext = unknown, TArgs = Record<string, unknown>>
+  extends _Tool {
+  execute(args: TArgs, context: TContext): Promise<CallToolResult>;
+}
+
+interface GetPageContext {
   projectName: string;
   cosenseOptions: { sid?: string };
+}
+
+interface ListPagesContext {
   pageResources: Resources<PageResource>;
 }
 
-export interface Tool extends _Tool {
-  execute(
-    args: Record<string, unknown>,
-    context: ToolContext
-  ): Promise<CallToolResult>;
-}
-
-export class GetPageTool implements Tool {
-  readonly name = 'get_page';
-  [key: string]: unknown;
-
-  get description() {
-    return 'Get a page with the specified title from the Cosense project.';
-  }
-
-  readonly inputSchema = {
+export const getPageTool: Tool<GetPageContext, { pageTitle: string }> = {
+  name: 'get_page',
+  description: 'Get a page with the specified title from the Cosense project.',
+  inputSchema: {
     type: 'object' as const,
     properties: {
       pageTitle: {
@@ -35,11 +31,10 @@ export class GetPageTool implements Tool {
       },
     },
     required: ['pageTitle'],
-  };
-
+  },
   async execute(
     { pageTitle }: { pageTitle: string },
-    { projectName, cosenseOptions }: ToolContext
+    { projectName, cosenseOptions }: GetPageContext
   ): Promise<CallToolResult> {
     const page = await getPage(projectName, pageTitle, cosenseOptions);
     return {
@@ -50,26 +45,20 @@ export class GetPageTool implements Tool {
         },
       ],
     };
-  }
-}
+  },
+};
 
-export class ListPagesTool implements Tool {
-  readonly name = 'list_pages';
-  [key: string]: unknown;
-
-  get description() {
-    return 'List Cosense pages in the resources.';
-  }
-
-  readonly inputSchema = {
+export const listPagesTool: Tool<ListPagesContext> = {
+  name: 'list_pages',
+  description: 'List Cosense pages in the resources.',
+  inputSchema: {
     type: 'object' as const,
     properties: {},
     required: [],
-  };
-
+  },
   async execute(
     _args: Record<string, unknown>,
-    { pageResources }: ToolContext
+    { pageResources }: ListPagesContext
   ): Promise<CallToolResult> {
     return {
       content: [
@@ -82,5 +71,5 @@ export class ListPagesTool implements Tool {
         },
       ],
     };
-  }
-}
+  },
+};

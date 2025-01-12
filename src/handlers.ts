@@ -9,7 +9,7 @@ import {
 import { Config } from './config.js';
 import { listPages } from './cosense.js';
 import { PageResource, Resources } from './resource.js';
-import { GetPageTool, ListPagesTool, Tool, ToolContext } from './tools.js';
+import { getPageTool, listPagesTool, Tool } from './tools.js';
 
 export class Handlers {
   private pageResources: Resources<PageResource> = new Resources();
@@ -20,7 +20,7 @@ export class Handlers {
     this.cosenseOptions = {
       sid: this.config.cosenseSid,
     };
-    this.tools = [new GetPageTool(), new ListPagesTool()];
+    this.tools = [getPageTool, listPagesTool];
   }
 
   async initialize() {
@@ -61,18 +61,29 @@ export class Handlers {
     };
   }
 
+  createToolContext<TContext>(tool: Tool<TContext>): TContext {
+    switch (tool.name) {
+      case 'get_page':
+        return {
+          projectName: this.config.projectName,
+          cosenseOptions: this.cosenseOptions,
+        } as TContext;
+      case 'list_pages':
+        return {
+          pageResources: this.pageResources,
+        } as TContext;
+      default:
+        throw new Error(`Unknown tool: ${tool.name}`);
+    }
+  }
+
   async handleCallTool(request: CallToolRequest): Promise<CallToolResult> {
     const tool = this.tools.find((t) => t.name === request.params.name);
     if (!tool) {
       throw new Error(`Unknown tool: ${request.params.name}`);
     }
 
-    const context: ToolContext = {
-      projectName: this.config.projectName,
-      cosenseOptions: this.cosenseOptions,
-      pageResources: this.pageResources,
-    };
-
+    const context = this.createToolContext(tool);
     return await tool.execute(request.params.arguments ?? {}, context);
   }
 }
