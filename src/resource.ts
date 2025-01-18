@@ -40,14 +40,15 @@ export class PageResource implements Resource {
 function generateDescription(page: BasePage): string {
   return [
     `Title: ${page.title}`,
-    `Description: "${page.descriptions.join('\n')}"`,
+    `Description:`,
+    ...page.descriptions,
     `Created: ${formatDate(page.created)}`,
     `Last Updated: ${formatDate(page.updated)}`,
     `Last Accessed: ${formatDate(page.accessed)}`,
     `Views: ${page.views}`,
     `Linked from: ${page.linked} pages`,
     `Page Rank: ${page.pageRank}`,
-  ].join(', ');
+  ].join('\n');
 }
 
 export class Resources<T extends Resource> {
