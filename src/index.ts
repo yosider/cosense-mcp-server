@@ -16,8 +16,7 @@ dotenv.config();
 
 async function main() {
   const config = getConfig();
-  const handlers = new Handlers(config);
-  await handlers.initialize();
+  const handlers = await Handlers.create(config);
 
   const server = new Server(
     {

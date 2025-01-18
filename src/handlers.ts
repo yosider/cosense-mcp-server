@@ -16,14 +16,20 @@ export class Handlers {
   private cosenseOptions: { sid?: string };
   private tools: Tool[];
 
-  constructor(private config: Config) {
+  private constructor(private config: Config) {
     this.cosenseOptions = {
       sid: this.config.cosenseSid,
     };
     this.tools = [getPageTool, listPagesTool];
   }
 
-  async initialize() {
+  static async create(config: Config): Promise<Handlers> {
+    const handlers = new Handlers(config);
+    await handlers.loadPages();
+    return handlers;
+  }
+
+  private async loadPages() {
     const pageList = await listPages(
       this.config.projectName,
       this.cosenseOptions
