@@ -3,7 +3,7 @@ import {
   ReadResourceResult,
   Resource,
 } from '@modelcontextprotocol/sdk/types.js';
-import { getPage, toReadablePage } from './cosense.js';
+import { getPage, pageToText } from './cosense.js';
 import { formatDate } from './utils.js';
 
 export class PageResource implements Resource {
@@ -30,7 +30,7 @@ export class PageResource implements Resource {
         {
           uri: this.uri,
           mimeType: this.mimeType,
-          text: toReadablePage(page).description,
+          text: pageToText(page),
         },
       ],
     };

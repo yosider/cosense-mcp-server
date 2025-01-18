@@ -2,7 +2,7 @@ import {
   CallToolResult,
   Tool as _Tool,
 } from '@modelcontextprotocol/sdk/types.js';
-import { getPage, toReadablePage } from './cosense.js';
+import { getPage, pageToText } from './cosense.js';
 import { PageResource, Resources } from './resource.js';
 
 export interface Tool<TContext = unknown, TArgs = Record<string, unknown>>
@@ -41,7 +41,7 @@ export const getPageTool: Tool<GetPageContext, { pageTitle: string }> = {
       content: [
         {
           type: 'text',
-          text: toReadablePage(page).description,
+          text: pageToText(page),
         },
       ],
     };

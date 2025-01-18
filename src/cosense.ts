@@ -5,27 +5,13 @@ import {
 import type { Page, PageList } from '@cosense/types/rest';
 import { Result, isErr, unwrapErr, unwrapOk } from 'option-t/PlainResult';
 
-export function toReadablePage(page: Page): {
-  title: string;
-  description: string;
-} {
-  const titleAndDescription = `
+export function pageToText(page: Page): string {
+  const text = `
 ${page.title}
----
 
 ${page.lines.map((line) => line.text).join('\n')}
 `;
-
-  const relatedPages =
-    page.links.length > 0
-      ? `## 関連するページのタイトル
-${page.links.join('\n')}
-`
-      : '';
-  return {
-    title: page.title,
-    description: titleAndDescription + '\n' + relatedPages,
-  };
+  return text;
 }
 
 export async function getPage(
