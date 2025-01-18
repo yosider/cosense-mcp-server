@@ -12,13 +12,15 @@ import { PageResource, Resources } from './resource.js';
 import { getPageTool, listPagesTool, Tool } from './tools/index.js';
 
 export class Handlers {
-  private pageResources: Resources<PageResource> = new Resources();
+  private projectName: string;
   private cosenseOptions: { sid?: string };
+  private pageResources: Resources<PageResource> = new Resources();
   private tools: Tool[];
 
-  private constructor(private config: Config) {
+  private constructor(config: Config) {
+    this.projectName = config.projectName;
     this.cosenseOptions = {
-      sid: this.config.cosenseSid,
+      sid: config.cosenseSid,
     };
     this.tools = [getPageTool, listPagesTool];
   }
@@ -30,10 +32,7 @@ export class Handlers {
   }
 
   private async loadPages() {
-    const pageList = await listPages(
-      this.config.projectName,
-      this.cosenseOptions
-    );
+    const pageList = await listPages(this.projectName, this.cosenseOptions);
     pageList.pages.forEach((page) => {
       this.pageResources.add(new PageResource(page));
     });
@@ -51,10 +50,7 @@ export class Handlers {
     request: ReadResourceRequest
   ): Promise<ReadResourceResult> {
     const pageResource = this.pageResources.findByUri(request.params.uri);
-    return await pageResource.read(
-      this.config.projectName,
-      this.cosenseOptions
-    );
+    return await pageResource.read(this.projectName, this.cosenseOptions);
   }
 
   async handleListTools(): Promise<ListToolsResult> {
@@ -81,7 +77,7 @@ export class Handlers {
     switch (tool.name) {
       case getPageTool.name:
         return {
-          projectName: this.config.projectName,
+          projectName: this.projectName,
           cosenseOptions: this.cosenseOptions,
         } as TContext;
       case listPagesTool.name:
