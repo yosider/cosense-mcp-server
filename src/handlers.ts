@@ -67,7 +67,17 @@ export class Handlers {
     };
   }
 
-  createToolContext<TContext>(tool: Tool<TContext>): TContext {
+  async handleCallTool(request: CallToolRequest): Promise<CallToolResult> {
+    const tool = this.tools.find((t) => t.name === request.params.name);
+    if (!tool) {
+      throw new Error(`Unknown tool: ${request.params.name}`);
+    }
+
+    const context = this.createToolContext(tool);
+    return await tool.execute(request.params.arguments ?? {}, context);
+  }
+
+  private createToolContext<TContext>(tool: Tool<TContext>): TContext {
     switch (tool.name) {
       case getPageTool.name:
         return {
@@ -81,15 +91,5 @@ export class Handlers {
       default:
         throw new Error(`Unknown tool: ${tool.name}`);
     }
-  }
-
-  async handleCallTool(request: CallToolRequest): Promise<CallToolResult> {
-    const tool = this.tools.find((t) => t.name === request.params.name);
-    if (!tool) {
-      throw new Error(`Unknown tool: ${request.params.name}`);
-    }
-
-    const context = this.createToolContext(tool);
-    return await tool.execute(request.params.arguments ?? {}, context);
   }
 }
