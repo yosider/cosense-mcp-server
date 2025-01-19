@@ -9,7 +9,12 @@ import {
 import { Config } from './config.js';
 import { listPages } from './cosense.js';
 import { PageResource, Resources } from './resource.js';
-import { getPageTool, listPagesTool, Tool } from './tools/index.js';
+import {
+  getPageTool,
+  listPagesTool,
+  searchPagesTool,
+  Tool,
+} from './tools/index.js';
 
 export class Handlers {
   private projectName: string;
@@ -22,7 +27,7 @@ export class Handlers {
     this.cosenseOptions = {
       sid: config.cosenseSid,
     };
-    this.tools = [getPageTool, listPagesTool];
+    this.tools = [getPageTool, listPagesTool, searchPagesTool];
   }
 
   static async create(config: Config): Promise<Handlers> {
@@ -83,6 +88,11 @@ export class Handlers {
       case listPagesTool.name:
         return {
           pageResources: this.pageResources,
+        } as TContext;
+      case searchPagesTool.name:
+        return {
+          projectName: this.projectName,
+          cosenseOptions: this.cosenseOptions,
         } as TContext;
       default:
         throw new Error(`Unknown tool: ${tool.name}`);

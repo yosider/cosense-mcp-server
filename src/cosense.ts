@@ -1,8 +1,9 @@
 import {
   getPage as _getPage,
   listPages as _listPages,
+  searchForPages as _searchForPages,
 } from '@cosense/std/rest';
-import type { Page, PageList } from '@cosense/types/rest';
+import type { Page, PageList, SearchResult } from '@cosense/types/rest';
 import { Result, isErr, unwrapErr, unwrapOk } from 'option-t/PlainResult';
 
 export function pageToText(page: Page): string {
@@ -31,6 +32,16 @@ export async function listPages(
   const result = await _listPages(projectName, options);
   const pages = unwrap(result)!;
   return pages;
+}
+
+export async function searchForPages(
+  query: string,
+  projectName: string,
+  options: { sid?: string } = {}
+): Promise<SearchResult> {
+  const result = await _searchForPages(query, projectName, options);
+  const searchResult = unwrap(result)!;
+  return searchResult;
 }
 
 function unwrap<T>(result: Result<T, unknown>): T {
