@@ -1,4 +1,5 @@
 # Cosense MCP Server
+[![smithery badge](https://smithery.ai/badge/@yosider/cosense-mcp-server)](https://smithery.ai/server/@yosider/cosense-mcp-server)
 
 MCP server for [Cosense](https://cosen.se)  
 Forked from [funwarioisii/cosense-mcp-server](https://github.com/funwarioisii/cosense-mcp-server)
@@ -9,6 +10,15 @@ Forked from [funwarioisii/cosense-mcp-server](https://github.com/funwarioisii/co
 
 ## Installation
 
+### Installing via Smithery
+
+To install Cosense for Claude Desktop automatically via [Smithery](https://smithery.ai/server/@yosider/cosense-mcp-server):
+
+```bash
+npx -y @smithery/cli install @yosider/cosense-mcp-server --client claude
+```
+
+### Manual Installation
 ```bash
 git clone https://github.com/funwarioisii/cosense-mcp-server.git
 cd cosense-mcp-server
