@@ -21,7 +21,7 @@
     "inspect": "npx @modelcontextprotocol/inspector npm run start"
   },
   "dependencies": {
-    "@cosense/std": "npm:@jsr/cosense__std@^0.29.5",
+    "@cosense/std": "npm:@jsr/cosense__std@^0.29.8",
     "@modelcontextprotocol/sdk": "0.6.0",
     "dotenv": "^16.4.7",
     "option-t": "^39.0.3"
