@@ -4,7 +4,7 @@ import {
   searchForPages as _searchForPages,
 } from '@cosense/std/rest';
 import type { Page, PageList, SearchResult } from '@cosense/types/rest';
-import { Result, isErr, unwrapErr, unwrapOk } from 'option-t/PlainResult';
+import { type Result, isErr, unwrapErr, unwrapOk } from 'option-t/plain_result';
 
 export function pageToText(page: Page): string {
   const text = `

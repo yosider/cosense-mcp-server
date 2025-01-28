@@ -1,7 +1,7 @@
-import { FoundPage, SearchResult } from '@cosense/types/rest';
-import { CallToolResult } from '@modelcontextprotocol/sdk/types.js';
+import type { FoundPage, SearchResult } from '@cosense/types/rest';
+import type { CallToolResult } from '@modelcontextprotocol/sdk/types.js';
 import { searchForPages } from '../cosense.js';
-import { Tool } from './types.js';
+import type { Tool } from './types.js';
 
 export interface SearchPagesContext {
   projectName: string;

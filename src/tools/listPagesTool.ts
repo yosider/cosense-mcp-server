@@ -1,6 +1,6 @@
-import { CallToolResult } from '@modelcontextprotocol/sdk/types.js';
+import type { CallToolResult } from '@modelcontextprotocol/sdk/types.js';
 import { PageResource, Resources } from '../resource.js';
-import { Tool } from './types.js';
+import type { Tool } from './types.js';
 
 export interface ListPagesContext {
   pageResources: Resources<PageResource>;

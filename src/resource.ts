@@ -1,5 +1,5 @@
-import { BasePage } from '@cosense/types/rest';
-import {
+import type { BasePage } from '@cosense/types/rest';
+import type {
   ReadResourceResult,
   Resource,
 } from '@modelcontextprotocol/sdk/types.js';
