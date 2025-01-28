@@ -3,9 +3,14 @@
 MCP server for [Cosense](https://cosen.se)  
 Forked from [funwarioisii/cosense-mcp-server](https://github.com/funwarioisii/cosense-mcp-server)
 
-## Features
+## Tools
 
-- Get Page
+The following tools are available for interacting with Cosense pages:
+
+- `get_page`: Retrieves a page with the specified title
+- `list_pages`: Lists available pages in the resources
+- `search_pages`: Searches for pages containing the specified query string
+- `insert_lines`: Inserts text after a specified line in a page
 
 ## Installation
 
@@ -17,6 +22,7 @@ npm run build
 ```
 
 To use with Claude Desktop, add the server config:
+
 - MacOS: `~/Library/Application\ Support/Claude/claude_desktop_config.json`
 - Windows: `%APPDATA%/Claude/claude_desktop_config.json`
 
