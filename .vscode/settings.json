@@ -14,5 +14,5 @@
   "[json]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
-  "npm.packageManager": "npm"
+  "npm.packageManager": "bun"
 }
