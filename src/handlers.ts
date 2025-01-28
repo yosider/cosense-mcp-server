@@ -11,6 +11,7 @@ import { listPages } from './cosense.js';
 import { PageResource, Resources } from './resource.js';
 import {
   getPageTool,
+  insertLinesTool,
   listPagesTool,
   searchPagesTool,
   Tool,
@@ -27,7 +28,7 @@ export class Handlers {
     this.cosenseOptions = {
       sid: config.cosenseSid,
     };
-    this.tools = [getPageTool, listPagesTool, searchPagesTool];
+    this.tools = [getPageTool, listPagesTool, searchPagesTool, insertLinesTool];
   }
 
   static async create(config: Config): Promise<Handlers> {
@@ -90,6 +91,11 @@ export class Handlers {
           pageResources: this.pageResources,
         } as TContext;
       case searchPagesTool.name:
+        return {
+          projectName: this.projectName,
+          cosenseOptions: this.cosenseOptions,
+        } as TContext;
+      case insertLinesTool.name:
         return {
           projectName: this.projectName,
           cosenseOptions: this.cosenseOptions,
