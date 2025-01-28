@@ -1,4 +1,4 @@
-import {
+import type {
   CallToolRequest,
   CallToolResult,
   ListResourcesResult,
@@ -6,7 +6,7 @@ import {
   ReadResourceRequest,
   ReadResourceResult,
 } from '@modelcontextprotocol/sdk/types.js';
-import { Config } from './config.js';
+import type { Config } from './config.js';
 import { listPages } from './cosense.js';
 import { PageResource, Resources } from './resource.js';
 import {
@@ -14,7 +14,7 @@ import {
   insertLinesTool,
   listPagesTool,
   searchPagesTool,
-  Tool,
+  type Tool,
 } from './tools/index.js';
 
 export class Handlers {

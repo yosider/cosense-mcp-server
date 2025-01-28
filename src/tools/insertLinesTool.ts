@@ -1,7 +1,7 @@
 import { patch } from '@cosense/std/websocket';
-import { CallToolResult } from '@modelcontextprotocol/sdk/types.js';
-import { unwrapErr } from 'option-t/PlainResult';
-import { Tool } from './types.js';
+import type { CallToolResult } from '@modelcontextprotocol/sdk/types.js';
+import { unwrapErr } from 'option-t/plain_result';
+import type { Tool } from './types.js';
 
 export interface InsertLinesContext {
   projectName: string;
