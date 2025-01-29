@@ -14,8 +14,8 @@
     "build": "tsc",
     "prepare": "npm run build",
     "watch": "tsc --watch",
-    "lint": "eslint . --ext .ts",
-    "lint:fix": "eslint . --ext .ts --fix",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
     "format": "prettier --write \"src/**/*.ts\"",
     "start": "tsx src/index.ts",
     "start:dev": "tsx watch src/index.ts",
@@ -29,6 +29,7 @@
   },
   "devDependencies": {
     "@cosense/types": "npm:@jsr/cosense__types@^0.10.4",
+    "@eslint/js": "^9.19.0",
     "@types/node": "^22.12.0",
     "@typescript-eslint/eslint-plugin": "^8.22.0",
     "@typescript-eslint/parser": "^8.22.0",
@@ -36,6 +37,7 @@
     "eslint-config-prettier": "^10.0.1",
     "prettier": "^3.4.2",
     "tsx": "^4.19.2",
-    "typescript": "^5.7.3"
+    "typescript": "^5.7.3",
+    "typescript-eslint": "^8.22.0"
   }
 }
