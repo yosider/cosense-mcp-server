@@ -15,7 +15,7 @@ The following tools are available for interacting with Cosense pages:
 ## Installation
 
 ```bash
-git clone https://github.com/funwarioisii/cosense-mcp-server.git
+git clone https://github.com/yosider/cosense-mcp-server.git
 cd cosense-mcp-server
 npm run install
 npm run build
