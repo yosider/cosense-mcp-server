@@ -1,7 +1,6 @@
 # Cosense MCP Server
 
-MCP server for [Cosense](https://cosen.se)  
-Forked from [funwarioisii/cosense-mcp-server](https://github.com/funwarioisii/cosense-mcp-server)
+A MCP server for [Cosense](https://cosen.se).
 
 ## Tools
 
@@ -12,26 +11,24 @@ The following tools are available for interacting with Cosense pages:
 - `search_pages`: Searches for pages containing the specified query string
 - `insert_lines`: Inserts text after a specified line in a page
 
-## Installation
+## MCP Client Configuration
 
-```bash
-git clone https://github.com/yosider/cosense-mcp-server.git
-cd cosense-mcp-server
-npm run install
-npm run build
-```
+The following environment variables are required:
 
-To use with Claude Desktop, add the server config:
+- `COSENSE_PROJECT_NAME`: Project name
+- `COSENSE_SID`: Session ID for authentication
+  - Required for writing to pages and reading private pages
+  - Handle with care as it contains sensitive information
+  - For more details, see [scrapboxlab/connect.sid](https://scrapbox.io/scrapboxlab/connect.sid)
 
-- MacOS: `~/Library/Application\ Support/Claude/claude_desktop_config.json`
-- Windows: `%APPDATA%/Claude/claude_desktop_config.json`
+### Run from npm registry
 
 ```json
 {
   "mcpServers": {
     "cosense-mcp-server": {
       "command": "npx",
-      "args": ["/path/to/cosense-mcp-server"],
+      "args": ["-y", "@yosider/cosense-mcp-server"],
       "env": {
         "COSENSE_PROJECT_NAME": "your_project_name",
         "COSENSE_SID": "your_sid"
@@ -41,8 +38,29 @@ To use with Claude Desktop, add the server config:
 }
 ```
 
-`COSENSE_SID` is optional.
-If you want to use this server towards a private project, you need to set `COSENSE_SID`.
+### Run from source
+
+```bash
+git clone https://github.com/yosider/cosense-mcp-server.git
+cd cosense-mcp-server
+npm install
+npm run build
+```
+
+```json
+{
+  "mcpServers": {
+    "cosense-mcp-server": {
+      "command": "npx",
+      "args": ["-y", "/path/to/cosense-mcp-server"],
+      "env": {
+        "COSENSE_PROJECT_NAME": "your_project_name",
+        "COSENSE_SID": "your_sid"
+      }
+    }
+  }
+}
+```
 
 ### Debugging
 
@@ -53,3 +71,7 @@ npm run inspect
 ```
 
 The Inspector will provide a URL to access debugging tools in your browser.
+
+## Acknowledgments
+
+This project is forked from [funwarioisii/cosense-mcp-server](https://github.com/funwarioisii/cosense-mcp-server).
