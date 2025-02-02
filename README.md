@@ -23,6 +23,20 @@ The following environment variables are required:
 
 ### Run from npm registry
 
+#### JSR registry configuration
+
+This package depends on [@cosense/std](https://jsr.io/@cosense/std) and [@cosense/types](https://jsr.io/@cosense/types) which are hosted on JSR. Before using npx, you need to configure the JSR registry globally:
+
+```bash
+echo "@jsr:registry=https://npm.jsr.io" >> ~/.npmrc
+```
+
+Or if you prefer not to modify global settings, run from source instead (see the section below)
+
+#### Client json configuration
+
+After configuring JSR registry, configure your MCP client:
+
 ```json
 {
   "mcpServers": {
@@ -40,12 +54,16 @@ The following environment variables are required:
 
 ### Run from source
 
+#### Clone and build
+
 ```bash
 git clone https://github.com/yosider/cosense-mcp-server.git
 cd cosense-mcp-server
 npm install
 npm run build
 ```
+
+#### Client json configuration
 
 ```json
 {
