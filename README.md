@@ -27,8 +27,16 @@ The following environment variables are required:
 
 This package depends on [@cosense/std](https://jsr.io/@cosense/std) and [@cosense/types](https://jsr.io/@cosense/types) which are hosted on JSR. Before using npx, you need to configure the JSR registry globally:
 
+For Linux/macOS:
+
 ```bash
 echo "@jsr:registry=https://npm.jsr.io" >> ~/.npmrc
+```
+
+For Windows (PowerShell):
+
+```powershell
+echo "@jsr:registry=https://npm.jsr.io" >> $env:USERPROFILE\.npmrc
 ```
 
 Or if you prefer not to modify global settings, run from source instead (see the section below)
