@@ -7,10 +7,19 @@ import type { Page, PageList, SearchResult } from '@cosense/types/rest';
 import { type Result, isErr, unwrapErr, unwrapOk } from 'option-t/plain_result';
 
 export function pageToText(page: Page): string {
+  console.log(page.relatedPages);
   const text = `
-${page.title}
-
 ${page.lines.map((line) => line.text).join('\n')}
+
+# Related Pages
+## 1-hop links
+${page.relatedPages.links1hop.map((page) => page.title).join('\n')}
+
+## 2-hop links
+${page.relatedPages.links2hop.map((page) => page.title).join('\n')}
+
+## external links
+${page.relatedPages.projectLinks1hop.map((page) => page.title).join('\n')}
 `;
   return text;
 }
