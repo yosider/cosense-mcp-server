@@ -1,20 +1,15 @@
 import { patch } from '@cosense/std/websocket';
 import type { CallToolResult } from '@modelcontextprotocol/sdk/types.js';
 import { unwrapErr } from 'option-t/plain_result';
-import type { Tool } from './types.js';
+import type { Tool, ToolContext } from './types.js';
 
-export interface InsertLinesContext {
-  projectName: string;
-  cosenseOptions: { sid?: string };
-}
-
-interface InsertLinesArgs {
+type InsertLinesArgs = {
   pageTitle: string;
   targetLineText: string;
   text: string;
-}
+};
 
-export const insertLinesTool: Tool<InsertLinesContext, InsertLinesArgs> = {
+export const insertLinesTool: Tool<InsertLinesArgs> = {
   name: 'insert_lines',
   description:
     'Insert lines after the specified target line in a Cosense page. If the target line is not found, append to the end of the page.',
@@ -40,7 +35,7 @@ export const insertLinesTool: Tool<InsertLinesContext, InsertLinesArgs> = {
   },
   async execute(
     { pageTitle, targetLineText, text }: InsertLinesArgs,
-    { projectName, cosenseOptions }: InsertLinesContext
+    { projectName, cosenseOptions }: ToolContext
   ): Promise<CallToolResult> {
     const result = await patch(
       projectName,
