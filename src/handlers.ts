@@ -5,17 +5,17 @@ import type {
   ListToolsResult,
   ReadResourceRequest,
   ReadResourceResult,
-} from '@modelcontextprotocol/sdk/types.js';
-import type { Config } from './config.js';
-import { listPages } from './cosense.js';
-import { PageResource, Resources } from './resource.js';
+} from "@modelcontextprotocol/sdk/types";
+import type { Config } from "./config.ts";
+import { listPages } from "./cosense.ts";
+import { PageResource, Resources } from "./resource.ts";
 import {
   getPageTool,
   insertLinesTool,
   listPagesTool,
   searchPagesTool,
   type Tool,
-} from './tools/index.js';
+} from "./tools/index.ts";
 
 export class Handlers {
   private projectName: string;
@@ -46,27 +46,27 @@ export class Handlers {
     console.error(`Found ${this.pageResources.count} resources`);
   }
 
-  async handleListResources(): Promise<ListResourcesResult> {
-    return {
+  handleListResources(): Promise<ListResourcesResult> {
+    return Promise.resolve({
       resources: this.pageResources.getAll(),
-    };
+    });
   }
 
   async handleReadResource(
-    request: ReadResourceRequest
+    request: ReadResourceRequest,
   ): Promise<ReadResourceResult> {
     const pageResource = this.pageResources.findByUri(request.params.uri);
     return await pageResource.read(this.projectName, this.cosenseOptions);
   }
 
-  async handleListTools(): Promise<ListToolsResult> {
-    return {
+  handleListTools(): Promise<ListToolsResult> {
+    return Promise.resolve({
       tools: this.tools.map((tool) => ({
         name: tool.name,
         description: tool.description,
         inputSchema: tool.inputSchema,
       })),
-    };
+    });
   }
 
   async handleCallTool(request: CallToolRequest): Promise<CallToolResult> {

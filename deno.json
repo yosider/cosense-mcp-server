@@ -1,0 +1,35 @@
+{
+  "imports": {
+    "@cosense/std": "jsr:@cosense/std@0.29",
+    "@cosense/types": "jsr:@cosense/types@0.10",
+    "@modelcontextprotocol/sdk": "npm:@modelcontextprotocol/sdk@1",
+    "option-t": "npm:option-t@53"
+  },
+  "license": "MIT",
+  "name": "cosense-mcp-server",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "tasks": {
+    "check": {
+      "command": "deno fmt --check && deno lint && deno publish --dry-run",
+      "dependencies": [
+        "type-check",
+        "test"
+      ]
+    },
+    "coverage": "deno test --allow-read=./ --parallel --shuffle --coverage --no-check && deno coverage --html",
+    "doc": "deno doc --html mod.ts",
+    "fix": {
+      "command": "deno fmt && deno lint --fix && deno publish --dry-run --allow-dirty",
+      "dependencies": [
+        "type-check",
+        "test"
+      ]
+    },
+    "test": "deno test --allow-read=./ --doc --parallel --shuffle --no-check",
+    "type-check": "deno check --remote **/*.ts",
+    "update": "deno outdated --update"
+  },
+  "version": "0.0.0"
+}

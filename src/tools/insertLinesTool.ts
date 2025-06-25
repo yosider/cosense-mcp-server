@@ -1,7 +1,7 @@
-import { patch } from '@cosense/std/websocket';
-import type { CallToolResult } from '@modelcontextprotocol/sdk/types.js';
-import { unwrapErr } from 'option-t/plain_result';
-import type { Tool } from './types.js';
+import { patch } from "@cosense/std/websocket";
+import type { CallToolResult } from "@modelcontextprotocol/sdk/types";
+import { unwrapErr } from "option-t/plain_result";
+import type { Tool } from "./types.ts";
 
 export interface InsertLinesContext {
   projectName: string;
@@ -15,32 +15,32 @@ interface InsertLinesArgs {
 }
 
 export const insertLinesTool: Tool<InsertLinesContext, InsertLinesArgs> = {
-  name: 'insert_lines',
+  name: "insert_lines",
   description:
-    'Insert lines after the specified target line in a Cosense page. If the target line is not found, append to the end of the page.',
+    "Insert lines after the specified target line in a Cosense page. If the target line is not found, append to the end of the page.",
   inputSchema: {
-    type: 'object' as const,
+    type: "object" as const,
     properties: {
       pageTitle: {
-        type: 'string',
-        description: 'Title of the page to modify',
+        type: "string",
+        description: "Title of the page to modify",
       },
       targetLineText: {
-        type: 'string',
+        type: "string",
         description:
-          'Text of the line after which to insert new content. If not found, content will be appended to the end.',
+          "Text of the line after which to insert new content. If not found, content will be appended to the end.",
       },
       text: {
-        type: 'string',
+        type: "string",
         description:
-          'Text to insert. If you want to insert multiple lines, use \\n for line breaks.',
+          "Text to insert. If you want to insert multiple lines, use \\n for line breaks.",
       },
     },
-    required: ['pageTitle', 'targetLineText', 'text'],
+    required: ["pageTitle", "targetLineText", "text"],
   },
   async execute(
     { pageTitle, targetLineText, text }: InsertLinesArgs,
-    { projectName, cosenseOptions }: InsertLinesContext
+    { projectName, cosenseOptions }: InsertLinesContext,
   ): Promise<CallToolResult> {
     const result = await patch(
       projectName,
@@ -54,18 +54,18 @@ export const insertLinesTool: Tool<InsertLinesContext, InsertLinesArgs> = {
         const linesText = lines.map((line) => line.text);
         return [
           ...linesText.slice(0, index + 1),
-          ...text.split('\n'),
+          ...text.split("\n"),
           ...linesText.slice(index + 1),
         ];
       },
-      cosenseOptions
+      cosenseOptions,
     );
 
     if (result.ok) {
       return {
         content: [
           {
-            type: 'text',
+            type: "text",
             text: `Successfully inserted lines.`,
           },
         ],
