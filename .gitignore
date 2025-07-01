@@ -137,3 +137,5 @@ dist
 
 # Build output
 build/
+
+dist/
