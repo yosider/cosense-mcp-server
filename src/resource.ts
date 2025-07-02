@@ -1,10 +1,10 @@
-import type { BasePage } from '@cosense/types/rest';
+import type { BasePage } from "@cosense/types/rest";
 import type {
   ReadResourceResult,
   Resource,
-} from '@modelcontextprotocol/sdk/types.js';
-import { getPage, pageToText } from './cosense.js';
-import { formatDate } from './utils.js';
+} from "@modelcontextprotocol/sdk/types";
+import { getPage, pageToText } from "./cosense.ts";
+import { formatDate } from "./utils.ts";
 
 export class PageResource implements Resource {
   readonly uri: string;
@@ -15,14 +15,14 @@ export class PageResource implements Resource {
 
   constructor(page: BasePage) {
     this.uri = `cosense:///${page.title}`;
-    this.mimeType = 'text/plain';
+    this.mimeType = "text/plain";
     this.name = page.title;
     this.description = generateDescription(page);
   }
 
   async read(
     projectName: string,
-    options?: { sid?: string }
+    options?: { sid?: string },
   ): Promise<ReadResourceResult> {
     const page = await getPage(projectName, this.name, options);
     return {
@@ -48,7 +48,7 @@ function generateDescription(page: BasePage): string {
     `Views: ${page.views}`,
     `Linked from: ${page.linked} pages`,
     `Page Rank: ${page.pageRank}`,
-  ].join('\n');
+  ].join("\n");
 }
 
 export class Resources<T extends Resource> {

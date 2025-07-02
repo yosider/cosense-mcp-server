@@ -4,8 +4,9 @@ export interface Config {
 }
 
 export function getConfig(): Config {
-  const cosenseSid = process.env.COSENSE_SID;
-  const projectName = process.env.COSENSE_PROJECT_NAME;
+  // DenoではDeno.envを使う
+  const cosenseSid = Deno.env.get("COSENSE_SID");
+  const projectName = Deno.env.get("COSENSE_PROJECT_NAME");
 
   if (!projectName) {
     throw new Error("COSENSE_PROJECT_NAME is not set");

@@ -19,13 +19,16 @@ The following environment variables are required:
 - `COSENSE_SID`: Session ID for authentication
   - Required for writing to pages and reading private pages
   - Handle with care as it contains sensitive information
-  - For more details, see [scrapboxlab/connect.sid](https://scrapbox.io/scrapboxlab/connect.sid)
+  - For more details, see
+    [scrapboxlab/connect.sid](https://scrapbox.io/scrapboxlab/connect.sid)
 
 ### Run from npm registry
 
 #### JSR registry configuration
 
-This package depends on [@cosense/std](https://jsr.io/@cosense/std) and [@cosense/types](https://jsr.io/@cosense/types) which are hosted on JSR. Before using npx, you need to configure the JSR registry globally:
+This package depends on [@cosense/std](https://jsr.io/@cosense/std) and
+[@cosense/types](https://jsr.io/@cosense/types) which are hosted on JSR. Before
+using npx, you need to configure the JSR registry globally:
 
 For Linux/macOS:
 
@@ -39,7 +42,8 @@ For Windows (PowerShell):
 echo "@jsr:registry=https://npm.jsr.io" >> $env:USERPROFILE\.npmrc
 ```
 
-Or if you prefer not to modify global settings, run from source instead (see the section below)
+Or if you prefer not to modify global settings, run from source instead (see the
+section below)
 
 #### Client json configuration
 
@@ -90,7 +94,10 @@ npm run build
 
 ### Debugging
 
-Since MCP servers communicate over stdio, debugging can be challenging. We recommend using the [MCP Inspector](https://github.com/modelcontextprotocol/inspector), which is available as a package script:
+Since MCP servers communicate over stdio, debugging can be challenging. We
+recommend using the
+[MCP Inspector](https://github.com/modelcontextprotocol/inspector), which is
+available as a package script:
 
 ```bash
 npm run inspect
@@ -100,4 +107,5 @@ The Inspector will provide a URL to access debugging tools in your browser.
 
 ## Acknowledgments
 
-This project is forked from [funwarioisii/cosense-mcp-server](https://github.com/funwarioisii/cosense-mcp-server).
+This project is forked from
+[funwarioisii/cosense-mcp-server](https://github.com/funwarioisii/cosense-mcp-server).
