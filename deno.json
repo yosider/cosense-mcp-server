@@ -1,4 +1,10 @@
 {
+  "compilerOptions": {
+    "types": [
+      "node:buffer",
+      "./xhr.d.ts"
+    ]
+  },
   "exports": {
     ".": "./src/index.ts"
   },
