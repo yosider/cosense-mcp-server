@@ -7,6 +7,7 @@ import z from "zod";
 import { getConfig } from "./config.ts";
 import { listPages, searchForPages } from "./cosense.ts";
 import { PageResource, Resources } from "./resource.ts";
+import denoJson from "../deno.json" with { type: "json" };
 
 function foundPageToText({ title, words, lines }: FoundPage): string {
   return [
@@ -40,7 +41,7 @@ if (import.meta.main) {
 
   const server = new McpServer({
     name: "cosense-mcp-server",
-    version: "0.2.1",
+    version: denoJson.version,
   });
 
   server.registerResource(
