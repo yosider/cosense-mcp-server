@@ -1,52 +1,160 @@
-// #!/usr/bin/env node
-
-// DenoではnpmパッケージのimportをURLまたはimport_map.json経由に変更
-// dotenv → Deno標準のDeno.envで代用
-// 拡張子.js → .ts
-import { Server } from "@modelcontextprotocol/sdk/server/index.js";
+import { patch } from "@cosense/std/websocket";
+import type { FoundPage, SearchResult } from "@cosense/types/rest";
+import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
-import {
-  CallToolRequestSchema,
-  ListResourcesRequestSchema,
-  ListToolsRequestSchema,
-  ReadResourceRequestSchema,
-} from "@modelcontextprotocol/sdk/types.js";
+import { unwrapErr } from "option-t/plain_result";
+import z from "zod";
 import { getConfig } from "./config.ts";
-import { Handlers } from "./handlers.ts";
+import { listPages, searchForPages } from "./cosense.ts";
+import { PageResource, Resources } from "./resource.ts";
+
+function foundPageToText({ title, words, lines }: FoundPage): string {
+  return [
+    `Page title: ${title}`,
+    `Matched words: ${words.join(", ")}`,
+    `Surrounding lines:`,
+    lines.join("\n"),
+  ].join("\n");
+}
+
+function searchResultToText({ query, count, pages }: SearchResult): string {
+  const headerText = [
+    `Search result for "${query}":`,
+    `Found ${count} pages.`,
+  ].join("\n");
+  const pageText = pages.map((page) => foundPageToText(page)).join("\n\n");
+  return [headerText, "", pageText].join("\n");
+}
 
 if (import.meta.main) {
   const config = getConfig();
-  const handlers = await Handlers.create(config);
 
-  const server = new Server(
+  const pageResources = new Resources<PageResource>();
+  const pageList = await listPages(config.projectName, {
+    sid: config.cosenseSid,
+  });
+  pageList.pages.forEach((page) => {
+    pageResources.add(new PageResource(page));
+  });
+  console.error(`Found ${pageResources.count} resources`);
+
+  const server = new McpServer({
+    name: "cosense-mcp-server",
+    version: "0.2.1",
+  });
+
+  server.registerResource(
+    "page",
+    "cosense:///{title}",
     {
-      name: "cosense-mcp-server",
-      version: "0.2.1",
+      title: "Cosense page resource",
+      description: "Cosense page resource",
+      mimeType: "text/plain",
+      list: () =>
+        pageResources.getAll().map((r) => ({
+          uri: r.uri,
+          name: r.name,
+          description: r.description,
+          mimeType: r.mimeType,
+        })),
     },
+    (uri) => {
+      const pageResource = pageResources.findByUri(uri.href);
+      return pageResource.read(config.projectName, { sid: config.cosenseSid });
+    },
+  );
+
+  server.registerTool(
+    "list_pages",
     {
-      capabilities: {
-        resources: {},
-        tools: {},
-        prompts: {},
+      description: "List Cosense pages in the resources.",
+      inputSchema: {},
+    },
+    () => {
+      return Promise.resolve({
+        content: [
+          {
+            type: "text",
+            text: pageResources
+              .getAll()
+              .map((r) => r.description)
+              .join("\n-----\n"),
+          },
+        ],
+      });
+    },
+  );
+
+  server.registerTool(
+    "search_pages",
+    {
+      description:
+        "Search for pages containing the specified query string in the Cosense project.",
+      inputSchema: {
+        query: z.string().describe("Search query string (space separated)"),
       },
     },
+    async (args, _context) => {
+      const { query } = args;
+      const searchResult = await searchForPages(query, config.projectName, {
+        sid: config.cosenseSid,
+      });
+      return {
+        content: [
+          {
+            type: "text",
+            text: searchResultToText(searchResult),
+          },
+        ],
+      };
+    },
   );
 
-  server.setRequestHandler(
-    ListResourcesRequestSchema,
-    () => handlers.handleListResources(),
-  );
-  server.setRequestHandler(
-    ReadResourceRequestSchema,
-    (req) => handlers.handleReadResource(req),
-  );
-  server.setRequestHandler(
-    ListToolsRequestSchema,
-    () => handlers.handleListTools(),
-  );
-  server.setRequestHandler(
-    CallToolRequestSchema,
-    (req) => handlers.handleCallTool(req),
+  server.registerTool(
+    "insert_lines",
+    {
+      description:
+        "Insert lines after the specified target line in a Cosense page. If the target line is not found, append to the end of the page.",
+      inputSchema: {
+        pageTitle: z.string().describe("Title of the page to modify"),
+        targetLineText: z.string().describe(
+          "Text of the line after which to insert new content. If not found, content will be appended to the end.",
+        ),
+        text: z.string().describe(
+          "Text to insert. If you want to insert multiple lines, use \\n for line breaks.",
+        ),
+      },
+    },
+    async (args, _context) => {
+      const { pageTitle, targetLineText, text } = args;
+      const result = await patch(
+        config.projectName,
+        pageTitle,
+        (lines) => {
+          let index = lines.findIndex((line) => line.text === targetLineText);
+          index = index < 0 ? lines.length : index;
+          const linesText = lines.map((line) => line.text);
+          return [
+            ...linesText.slice(0, index + 1),
+            ...text.split("\n"),
+            ...linesText.slice(index + 1),
+          ];
+        },
+        { sid: config.cosenseSid },
+      );
+      if (result.ok) {
+        return {
+          content: [
+            {
+              type: "text",
+              text: `Successfully inserted lines.`,
+            },
+          ],
+        };
+      } else {
+        throw unwrapErr(result);
+      }
+    },
   );
 
   const transport = new StdioServerTransport();
