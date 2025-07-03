@@ -1,15 +1,16 @@
 {
-  "imports": {
-    "@cosense/std": "jsr:@cosense/std@0.29",
-    "@cosense/types": "jsr:@cosense/types@0.10",
-    "@modelcontextprotocol/sdk": "npm:@modelcontextprotocol/sdk@1",
-    "option-t": "npm:option-t@53"
-  },
-  "license": "MIT",
-  "name": "cosense-mcp-server",
   "exports": {
     ".": "./src/index.ts"
   },
+  "imports": {
+    "@cosense/std": "jsr:@cosense/std@0.29",
+    "@cosense/types": "jsr:@cosense/types@0.10",
+    "@modelcontextprotocol/sdk": "npm:@modelcontextprotocol/sdk@1.13.3",
+    "option-t": "npm:option-t@53",
+    "zod": "npm:zod@^3.25.67"
+  },
+  "license": "MIT",
+  "name": "@takker/cosense-mcp-server",
   "tasks": {
     "check": {
       "command": "deno fmt --check && deno lint && deno publish --dry-run",

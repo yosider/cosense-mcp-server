@@ -1,21 +1,81 @@
 {
   "version": "5",
   "specifiers": {
-    "npm:@modelcontextprotocol/sdk@*": "1.13.1_express@5.1.0_zod@3.24.4",
-    "npm:@modelcontextprotocol/sdk@1": "1.13.1_express@5.1.0_zod@3.24.4",
+    "jsr:@core/iterutil@0.9": "0.9.0",
+    "jsr:@core/unknownutil@4": "4.3.0",
+    "jsr:@cosense/std@0.29": "0.29.14",
+    "jsr:@cosense/types@0.10": "0.10.8",
+    "jsr:@cosense/types@~0.10.7": "0.10.8",
+    "jsr:@progfay/scrapbox-parser@9": "9.2.0",
+    "jsr:@std/async@^1.0.11": "1.0.13",
+    "jsr:@std/encoding@1": "1.0.10",
+    "jsr:@std/json@1": "1.0.2",
+    "jsr:@std/streams@^1.0.9": "1.0.9",
+    "jsr:@takker/md5@0.1": "0.1.0",
+    "npm:@modelcontextprotocol/sdk@1.13.3": "1.13.3_express@5.1.0_zod@3.25.67",
     "npm:option-t@51": "51.1.1",
     "npm:option-t@53": "53.0.0",
-    "npm:socket.io-client@^4.7.5": "4.8.1"
+    "npm:socket.io-client@^4.7.5": "4.8.1",
+    "npm:zod@^3.25.67": "3.25.67"
+  },
+  "jsr": {
+    "@core/iterutil@0.9.0": {
+      "integrity": "29a4ba1af8e79c2d63d96df4948bb995afb5256568401711ae97a1ef06cc67a8"
+    },
+    "@core/unknownutil@4.3.0": {
+      "integrity": "538a3687ffa81028e91d148818047df219663d0da671d906cecd165581ae55cc"
+    },
+    "@cosense/std@0.29.14": {
+      "integrity": "2a603abf14e557376c94232e4a4ffce7d8322da398d5c8a8abe0975687021354",
+      "dependencies": [
+        "jsr:@core/iterutil",
+        "jsr:@core/unknownutil",
+        "jsr:@cosense/types@0.10",
+        "jsr:@cosense/types@~0.10.7",
+        "jsr:@progfay/scrapbox-parser",
+        "jsr:@std/async",
+        "jsr:@std/encoding",
+        "jsr:@std/json",
+        "jsr:@takker/md5",
+        "npm:option-t@51",
+        "npm:socket.io-client"
+      ]
+    },
+    "@cosense/types@0.10.8": {
+      "integrity": "f946efbd89459ae7bd888d589151b0020e557aabc152710db645337769d54981"
+    },
+    "@progfay/scrapbox-parser@9.2.0": {
+      "integrity": "82ebb95e72dd0ea44547fd48e2bcb479fd2275fc26c4515598f742e5aaf6e0e5"
+    },
+    "@std/async@1.0.13": {
+      "integrity": "1d76ca5d324aef249908f7f7fe0d39aaf53198e5420604a59ab5c035adc97c96"
+    },
+    "@std/encoding@1.0.10": {
+      "integrity": "8783c6384a2d13abd5e9e87a7ae0520a30e9f56aeeaa3bdf910a3eaaf5c811a1"
+    },
+    "@std/json@1.0.2": {
+      "integrity": "d9e5497801c15fb679f55a2c01c7794ad7a5dfda4dd1bebab5e409cb5e0d34d4",
+      "dependencies": [
+        "jsr:@std/streams"
+      ]
+    },
+    "@std/streams@1.0.9": {
+      "integrity": "a9d26b1988cdd7aa7b1f4b51e1c36c1557f3f252880fa6cc5b9f37078b1a5035"
+    },
+    "@takker/md5@0.1.0": {
+      "integrity": "4c423d8247aadf7bcb1eb83c727bf28c05c21906e916517395d00aa157b6eae0"
+    }
   },
   "npm": {
-    "@modelcontextprotocol/sdk@1.13.1_express@5.1.0_zod@3.24.4": {
-      "integrity": "sha512-8q6+9aF0yA39/qWT/uaIj6zTpC+Qu07DnN/lb9mjoquCJsAh6l3HyYqc9O3t2j7GilseOQOQimLg7W3By6jqvg==",
+    "@modelcontextprotocol/sdk@1.13.3_express@5.1.0_zod@3.25.67": {
+      "integrity": "sha512-bGwA78F/U5G2jrnsdRkPY3IwIwZeWUEfb5o764b79lb0rJmMT76TLwKhdNZOWakOQtedYefwIR4emisEMvInKA==",
       "dependencies": [
         "ajv",
         "content-type",
         "cors",
         "cross-spawn",
         "eventsource",
+        "eventsource-parser",
         "express",
         "express-rate-limit",
         "pkce-challenge",
@@ -164,8 +224,8 @@
     "etag@1.8.1": {
       "integrity": "sha512-aIL5Fx7mawVa300al2BnEE4iNvo1qETxLrPI/o05L7z6go7fCw1J6EQmbK4FmJ2AS7kgVF/KEZWufBfdClMcPg=="
     },
-    "eventsource-parser@3.0.2": {
-      "integrity": "sha512-6RxOBZ/cYgd8usLwsEl+EC09Au/9BcmCKYF2/xbml6DNczf7nv0MQb+7BA2F+li6//I+28VNlQR37XfQtcAJuA=="
+    "eventsource-parser@3.0.3": {
+      "integrity": "sha512-nVpZkTMM9rF6AQ9gPJpFsNAMt48wIzB5TQgiTLdHiuO8XEDhUgZEhqKlZWXbIzo9VmJ/HvysHqEaVeD5v9TPvA=="
     },
     "eventsource@3.0.7": {
       "integrity": "sha512-CRT1WTyuQoD771GW56XEZFQ/ZoSfWid1alKGDYMmkt2yl8UXrVR4pspqWNEcqKvVIzg6PAltWjxcSSPrboA4iA==",
@@ -206,7 +266,7 @@
         "router",
         "send",
         "serve-static",
-        "statuses",
+        "statuses@2.0.2",
         "type-is",
         "vary"
       ]
@@ -225,7 +285,7 @@
         "escape-html",
         "on-finished",
         "parseurl",
-        "statuses"
+        "statuses@2.0.2"
       ]
     },
     "forwarded@0.2.0": {
@@ -277,7 +337,7 @@
         "depd",
         "inherits",
         "setprototypeof",
-        "statuses",
+        "statuses@2.0.1",
         "toidentifier"
       ]
     },
@@ -419,7 +479,7 @@
         "ms",
         "on-finished",
         "range-parser",
-        "statuses"
+        "statuses@2.0.2"
       ]
     },
     "serve-static@2.2.0": {
@@ -498,6 +558,9 @@
     "statuses@2.0.1": {
       "integrity": "sha512-RwNA9Z/7PrK06rYLIzFMlaF+l73iwpzsqRIFgbMLbTcLD6cOao82TaWefPXQvB2fOC4AjuYSEndS7N/mTCbkdQ=="
     },
+    "statuses@2.0.2": {
+      "integrity": "sha512-DvEy55V3DB7uknRo+4iOGT5fP1slR8wQohVdknigZPMpMstaKJQWhwiYBACJE3Ul2pTnATihhBYnRhZQHGBiRw=="
+    },
     "toidentifier@1.0.1": {
       "integrity": "sha512-o5sSPKEkg/DIQNmH43V0/uerLrpzVedkUh8tGNvaeXpfpuwjKenlSox/2O/BTlZUtEe+JG7s5YhEz608PlAHRA=="
     },
@@ -537,14 +600,14 @@
     "xmlhttprequest-ssl@2.1.2": {
       "integrity": "sha512-TEU+nJVUUnA4CYJFLvK5X9AOeH4KvDvhIfm0vV1GaQRtchnG0hgK5p8hw/xjv8cunWYCsiPCSDzObPyhEwq3KQ=="
     },
-    "zod-to-json-schema@3.24.5_zod@3.24.4": {
-      "integrity": "sha512-/AuWwMP+YqiPbsJx5D6TfgRTc4kTLjsh5SOcd4bLsfUg2RcEXrFMJl1DGgdHy2aCfsIA/cr/1JM0xcB2GZji8g==",
+    "zod-to-json-schema@3.24.6_zod@3.25.67": {
+      "integrity": "sha512-h/z3PKvcTcTetyjl1fkj79MHNEjm+HpD6NXheWjzOekY7kV+lwDYnHw+ivHkijnCSMz1yJaWBD9vu/Fcmk+vEg==",
       "dependencies": [
         "zod"
       ]
     },
-    "zod@3.24.4": {
-      "integrity": "sha512-OdqJE9UDRPwWsrHjLN2F8bPxvwJBK22EHLWtanu0LSYr5YqzsaaW3RMgmjwr8Rypg5k+meEJdSPXJZXE/yqOMg=="
+    "zod@3.25.67": {
+      "integrity": "sha512-idA2YXwpCdqUSKRCACDE6ItZD9TZzy3OZMtpfLoh6oPR47lipysRrJfjzMqFxQ3uJuUPyUeWe1r9vLH33xO/Qw=="
     }
   },
   "redirects": {
@@ -592,8 +655,9 @@
     "dependencies": [
       "jsr:@cosense/std@0.29",
       "jsr:@cosense/types@0.10",
-      "npm:@modelcontextprotocol/sdk@1",
-      "npm:option-t@53"
+      "npm:@modelcontextprotocol/sdk@1.13.3",
+      "npm:option-t@53",
+      "npm:zod@^3.25.67"
     ]
   }
 }
