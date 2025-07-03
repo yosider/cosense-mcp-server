@@ -7,7 +7,7 @@ import z from "zod";
 import { getConfig } from "./config.ts";
 import { listPages, searchForPages } from "./cosense.ts";
 import { PageResource, Resources } from "./resource.ts";
-import denoJson from "../deno.json" with { type: "json" };
+import denoJson from "./deno.json" with { type: "json" };
 
 function foundPageToText({ title, words, lines }: FoundPage): string {
   return [
