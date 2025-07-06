@@ -1,11 +1,11 @@
 import { patch } from "@cosense/std/websocket";
-import type { FoundPage, SearchResult } from "@cosense/types/rest";
+import type { FoundPage, Page, SearchResult } from "@cosense/types/rest";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { unwrapErr } from "option-t/plain_result";
 import z from "zod";
 import { getConfig } from "./config.ts";
-import { listPages, searchForPages } from "./cosense.ts";
+import { getPage, listPages, searchForPages } from "./cosense.ts";
 import { PageResource, Resources } from "./resource.ts";
 import denoJson from "./deno.json" with { type: "json" };
 
@@ -25,6 +25,24 @@ function searchResultToText({ query, count, pages }: SearchResult): string {
   ].join("\n");
   const pageText = pages.map((page) => foundPageToText(page)).join("\n\n");
   return [headerText, "", pageText].join("\n");
+}
+
+function pageToText(page: Page): string {
+  console.log(page.relatedPages);
+  const text = `
+${page.lines.map((line) => line.text).join("\n")}
+
+# Related Pages
+## 1-hop links
+${page.relatedPages.links1hop.map((page) => page.title).join("\n")}
+
+## 2-hop links
+${page.relatedPages.links2hop.map((page) => page.title).join("\n")}
+
+## external links
+${page.relatedPages.projectLinks1hop.map((page) => page.title).join("\n")}
+`;
+  return text;
 }
 
 if (import.meta.main) {
@@ -51,19 +69,24 @@ if (import.meta.main) {
       title: "Cosense page resource",
       description: "Cosense page resource",
       mimeType: "text/plain",
-      list: () =>
-        pageResources.getAll().map((r) => ({
-          uri: r.uri,
-          name: r.name,
-          description: r.description,
-          mimeType: r.mimeType,
-        })),
+      list: () => pageResources.getAll().map((r) => ({ ...r })),
     },
     (uri) => {
       const pageResource = pageResources.findByUri(uri.href);
       return pageResource.read(config.projectName, { sid: config.cosenseSid });
     },
   );
+
+  server.registerTool("get_page", {
+    description:
+      "Get a page with the specified title from the Cosense project.",
+    inputSchema: { title: z.string().describe("Title of the page") },
+  }, async ({ title }) => {
+    const page = await getPage(config.projectName, title, {
+      sid: config.cosenseSid,
+    });
+    return { content: [{ type: "text", text: pageToText(page) }] };
+  });
 
   server.registerTool(
     "list_pages",
@@ -76,10 +99,9 @@ if (import.meta.main) {
         content: [
           {
             type: "text",
-            text: pageResources
-              .getAll()
-              .map((r) => r.description)
-              .join("\n-----\n"),
+            text: pageResources.getAll().map((r) => r.description).join(
+              "\n-----\n",
+            ),
           },
         ],
       });
