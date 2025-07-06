@@ -1,5 +1,8 @@
 # Cosense MCP Server
 
+[![JSR](https://jsr.io/badges/@takker/cosense-mcp-server)](https://jsr.io/@takker/cosense-mcp-server)
+[![test](https://github.com/takker99/cosense-mcp-server/workflows/check/badge.svg)](https://github.com/takker99/cosense-mcp-server/actions?query=workflow%3Acheck)
+
 A MCP server for [Cosense](https://cosen.se).
 
 ## Tools
