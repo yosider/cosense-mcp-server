@@ -22,67 +22,37 @@ The following environment variables are required:
   - For more details, see
     [scrapboxlab/connect.sid](https://scrapbox.io/scrapboxlab/connect.sid)
 
-### Run from npm registry
+### Usage
 
-#### JSR registry configuration
+This package is published on [JSR](https://jsr.io/@takker/cosense-mcp-server).
+You can use it directly via Deno.
 
-This package depends on [@cosense/std](https://jsr.io/@cosense/std) and
-[@cosense/types](https://jsr.io/@cosense/types) which are hosted on JSR. Before
-using npx, you need to configure the JSR registry globally:
+### Run as MCP server
 
-For Linux/macOS:
+You can run this server directly with Deno:
 
 ```bash
-echo "@jsr:registry=https://npm.jsr.io" >> ~/.npmrc
+deno run --allow-env --allow-net --allow-read --allow-write jsr:@takker/cosense-mcp-server
 ```
 
-For Windows (PowerShell):
+Set the required environment variables (`COSENSE_PROJECT_NAME`, `COSENSE_SID`)
+before running.
 
-```powershell
-echo "@jsr:registry=https://npm.jsr.io" >> $env:USERPROFILE\.npmrc
-```
-
-Or if you prefer not to modify global settings, run from source instead (see the
-section below)
-
-#### Client json configuration
-
-After configuring JSR registry, configure your MCP client:
+### MCP client configuration example
 
 ```json
 {
   "mcpServers": {
     "cosense-mcp-server": {
-      "command": "npx",
-      "args": ["-y", "@yosider/cosense-mcp-server"],
-      "env": {
-        "COSENSE_PROJECT_NAME": "your_project_name",
-        "COSENSE_SID": "your_sid"
-      }
-    }
-  }
-}
-```
-
-### Run from source
-
-#### Clone and build
-
-```bash
-git clone https://github.com/yosider/cosense-mcp-server.git
-cd cosense-mcp-server
-npm install
-npm run build
-```
-
-#### Client json configuration
-
-```json
-{
-  "mcpServers": {
-    "cosense-mcp-server": {
-      "command": "npx",
-      "args": ["-y", "/path/to/cosense-mcp-server"],
+      "command": "deno",
+      "args": [
+        "run",
+        "--allow-env",
+        "--allow-net",
+        "--allow-read",
+        "--allow-write",
+        "jsr:@takker/cosense-mcp-server"
+      ],
       "env": {
         "COSENSE_PROJECT_NAME": "your_project_name",
         "COSENSE_SID": "your_sid"
@@ -96,16 +66,18 @@ npm run build
 
 Since MCP servers communicate over stdio, debugging can be challenging. We
 recommend using the
-[MCP Inspector](https://github.com/modelcontextprotocol/inspector), which is
-available as a package script:
+[MCP Inspector](https://github.com/modelcontextprotocol/inspector) for debugging
+and inspection.
+
+You can run the inspector with:
 
 ```bash
-npm run inspect
+deno task inspect
 ```
 
 The Inspector will provide a URL to access debugging tools in your browser.
 
 ## Acknowledgments
 
-This project is forked from
-[funwarioisii/cosense-mcp-server](https://github.com/funwarioisii/cosense-mcp-server).
+This project is originally forked from
+[yosider/cosense-mcp-server](https://github.com/yosider/cosense-mcp-server).
