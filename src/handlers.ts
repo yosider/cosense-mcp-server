@@ -21,7 +21,7 @@ export class Handlers {
   private projectName: string;
   private cosenseOptions: { sid?: string };
   private pageResources: Resources<PageResource> = new Resources();
-  private tools: Tool[];
+  private tools: Tool<unknown>[];
 
   private constructor(config: Config) {
     this.projectName = config.projectName;
@@ -75,33 +75,11 @@ export class Handlers {
       throw new Error(`Unknown tool: ${request.params.name}`);
     }
 
-    const context = this.createToolContext(tool);
-    return await tool.execute(request.params.arguments ?? {}, context);
-  }
+    const context = {
+      projectName: this.projectName,
+      cosenseOptions: this.cosenseOptions,
+    };
 
-  private createToolContext<TContext>(tool: Tool<TContext>): TContext {
-    switch (tool.name) {
-      case getPageTool.name:
-        return {
-          projectName: this.projectName,
-          cosenseOptions: this.cosenseOptions,
-        } as TContext;
-      case listPagesTool.name:
-        return {
-          pageResources: this.pageResources,
-        } as TContext;
-      case searchPagesTool.name:
-        return {
-          projectName: this.projectName,
-          cosenseOptions: this.cosenseOptions,
-        } as TContext;
-      case insertLinesTool.name:
-        return {
-          projectName: this.projectName,
-          cosenseOptions: this.cosenseOptions,
-        } as TContext;
-      default:
-        throw new Error(`Unknown tool: ${tool.name}`);
-    }
+    return await tool.execute(request.params.arguments ?? {}, context);
   }
 }

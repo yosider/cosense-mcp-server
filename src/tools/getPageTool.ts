@@ -1,13 +1,12 @@
 import type { CallToolResult } from '@modelcontextprotocol/sdk/types.js';
 import { getPage, pageToText } from '../cosense.js';
-import type { Tool } from './types.js';
+import type { Tool, ToolContext } from './types.js';
 
-export interface GetPageContext {
-  projectName: string;
-  cosenseOptions: { sid?: string };
-}
+type GetPageArgs = {
+  pageTitle: string;
+};
 
-export const getPageTool: Tool<GetPageContext, { pageTitle: string }> = {
+export const getPageTool: Tool<GetPageArgs> = {
   name: 'get_page',
   description: 'Get a page with the specified title from the Cosense project.',
   inputSchema: {
@@ -21,8 +20,8 @@ export const getPageTool: Tool<GetPageContext, { pageTitle: string }> = {
     required: ['pageTitle'],
   },
   async execute(
-    { pageTitle }: { pageTitle: string },
-    { projectName, cosenseOptions }: GetPageContext
+    { pageTitle }: GetPageArgs,
+    { projectName, cosenseOptions }: ToolContext
   ): Promise<CallToolResult> {
     const page = await getPage(projectName, pageTitle, cosenseOptions);
     return {

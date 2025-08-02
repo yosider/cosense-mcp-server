@@ -1,14 +1,13 @@
 import type { FoundPage, SearchResult } from '@cosense/types/rest';
 import type { CallToolResult } from '@modelcontextprotocol/sdk/types.js';
 import { searchForPages } from '../cosense.js';
-import type { Tool } from './types.js';
+import type { Tool, ToolContext } from './types.js';
 
-export interface SearchPagesContext {
-  projectName: string;
-  cosenseOptions: { sid?: string };
-}
+type SearchPagesArgs = {
+  query: string;
+};
 
-export const searchPagesTool: Tool<SearchPagesContext, { query: string }> = {
+export const searchPagesTool: Tool<SearchPagesArgs> = {
   name: 'search_pages',
   description:
     'Search for pages containing the specified query string in the Cosense project.',
@@ -26,8 +25,8 @@ export const searchPagesTool: Tool<SearchPagesContext, { query: string }> = {
 };
 
 async function execute(
-  { query }: { query: string },
-  { projectName, cosenseOptions }: SearchPagesContext
+  { query }: SearchPagesArgs,
+  { projectName, cosenseOptions }: ToolContext
 ): Promise<CallToolResult> {
   const searchResult = await searchForPages(query, projectName, cosenseOptions);
   return {
