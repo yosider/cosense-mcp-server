@@ -39,9 +39,13 @@ async function execute(
   };
 }
 
-function searchResultToText({ query, count, pages }: SearchResult): string {
+function searchResultToText({
+  searchQuery,
+  count,
+  pages,
+}: SearchResult): string {
   const headerText = [
-    `Search result for "${query}":`,
+    `Search result for "${searchQuery}":`,
     `Found ${count} pages.`,
   ].join('\n');
   const pageText = pages.map((page) => foundPageToText(page)).join('\n\n');
