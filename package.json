@@ -1,6 +1,6 @@
 {
   "name": "@yosider/cosense-mcp-server",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "A MCP server for cosense",
   "license": "MIT",
   "publishConfig": {
