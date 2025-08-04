@@ -16,6 +16,7 @@ import {
   searchPagesTool,
   type Tool,
 } from './tools/index.js';
+import { logger } from './utils/logger.js';
 
 export class Handlers {
   private projectName: string;
@@ -43,7 +44,7 @@ export class Handlers {
       this.pageResources.add(new PageResource(page));
     });
     // output to stderr to avoid conflict with StdioServerTransport
-    console.error(`Found ${this.pageResources.count} resources`);
+    logger.error(`Found ${this.pageResources.count} resources`);
   }
 
   async handleListResources(): Promise<ListResourcesResult> {
