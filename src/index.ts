@@ -11,6 +11,7 @@ import {
 import dotenv from 'dotenv';
 import { getConfig } from './config.js';
 import { Handlers } from './handlers.js';
+import { logger } from './utils/logger.js';
 
 dotenv.config();
 
@@ -50,6 +51,6 @@ async function main() {
 }
 
 main().catch((error) => {
-  console.error('Server error:', error);
+  logger.error('Server error:', error);
   process.exit(1);
 });

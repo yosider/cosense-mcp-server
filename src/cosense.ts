@@ -5,9 +5,10 @@ import {
 } from '@cosense/std/rest';
 import type { Page, PageList, SearchResult } from '@cosense/types/rest';
 import { type Result, isErr, unwrapErr, unwrapOk } from 'option-t/plain_result';
+import { logger } from './utils/logger.js';
 
 export function pageToText(page: Page): string {
-  console.log(page.relatedPages);
+  logger.log(page.relatedPages);
   const text = `
 ${page.lines.map((line) => line.text).join('\n')}
 
