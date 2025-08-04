@@ -1,10 +1,4 @@
-import {
-  getPage as _getPage,
-  listPages as _listPages,
-  searchForPages as _searchForPages,
-} from '@cosense/std/rest';
-import type { Page, PageList, SearchResult } from '@cosense/types/rest';
-import { type Result, isErr, unwrapErr, unwrapOk } from 'option-t/plain_result';
+import type { Page, PageSummery } from '@cosense/types/rest';
 import { logger } from './utils/logger.js';
 
 export function pageToText(page: Page): string {
@@ -25,38 +19,19 @@ ${page.relatedPages.projectLinks1hop.map((page) => page.title).join('\n')}
   return text;
 }
 
-export async function getPage(
-  projectName: string,
-  title: string,
-  options: { sid?: string } = {}
-): Promise<Page> {
-  const result = await _getPage(projectName, title, options);
-  const page = unwrap(result)!;
-  return page;
+export function generateDescription(page: PageSummery): string {
+  return [
+    `Title: ${page.title}`,
+    `Description:`,
+    ...page.descriptions,
+    `Created: ${formatDate(page.created)}`,
+    `Last Updated: ${formatDate(page.updated)}`,
+    `Last Accessed: ${formatDate(page.accessed)}`,
+    `Views: ${page.views}`,
+    `Linked from: ${page.linked} pages`,
+  ].join('\n');
 }
 
-export async function listPages(
-  projectName: string,
-  options: { sid?: string } = {}
-): Promise<PageList> {
-  const result = await _listPages(projectName, options);
-  const pages = unwrap(result)!;
-  return pages;
-}
-
-export async function searchForPages(
-  query: string,
-  projectName: string,
-  options: { sid?: string } = {}
-): Promise<SearchResult> {
-  const result = await _searchForPages(query, projectName, options);
-  const searchResult = unwrap(result)!;
-  return searchResult;
-}
-
-function unwrap<T>(result: Result<T, unknown>): T {
-  if (isErr(result)) {
-    throw unwrapErr(result);
-  }
-  return unwrapOk(result);
+function formatDate(unixTime: number): string {
+  return new Date(unixTime * 1000).toLocaleString();
 }

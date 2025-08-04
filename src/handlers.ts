@@ -1,3 +1,4 @@
+import { listPages } from '@cosense/std/rest';
 import type {
   CallToolRequest,
   CallToolResult,
@@ -6,8 +7,8 @@ import type {
   ReadResourceRequest,
   ReadResourceResult,
 } from '@modelcontextprotocol/sdk/types.js';
+import { isErr, unwrapErr, unwrapOk } from 'option-t/plain_result';
 import type { Config } from './config.js';
-import { listPages } from './cosense.js';
 import { PageResource, Resources } from './resource.js';
 import {
   getPageTool,
@@ -39,7 +40,16 @@ export class Handlers {
   }
 
   private async loadPages() {
-    const pageList = await listPages(this.projectName, this.cosenseOptions);
+    const result = await listPages(this.projectName, this.cosenseOptions);
+
+    if (isErr(result)) {
+      const error = unwrapErr(result);
+      throw new Error(
+        `Failed to load pages from project "${this.projectName}": ${error}`
+      );
+    }
+
+    const pageList = unwrapOk(result);
     pageList.pages.forEach((page) => {
       this.pageResources.add(new PageResource(page));
     });

@@ -1,10 +1,11 @@
-import type { BasePage } from '@cosense/types/rest';
+import { getPage } from '@cosense/std/rest';
+import type { PageSummery } from '@cosense/types/rest';
 import type {
   ReadResourceResult,
   Resource,
 } from '@modelcontextprotocol/sdk/types.js';
-import { getPage, pageToText } from './cosense.js';
-import { formatDate } from './utils.js';
+import { isErr, unwrapErr, unwrapOk } from 'option-t/plain_result';
+import { generateDescription, pageToText } from './cosense.js';
 
 export class PageResource implements Resource {
   readonly uri: string;
@@ -13,7 +14,7 @@ export class PageResource implements Resource {
   readonly mimeType?: string;
   [key: string]: unknown;
 
-  constructor(page: BasePage) {
+  constructor(page: PageSummery) {
     this.uri = `cosense:///${page.title}`;
     this.mimeType = 'text/plain';
     this.name = page.title;
@@ -24,7 +25,16 @@ export class PageResource implements Resource {
     projectName: string,
     options?: { sid?: string }
   ): Promise<ReadResourceResult> {
-    const page = await getPage(projectName, this.name, options);
+    const result = await getPage(projectName, this.name, options);
+
+    if (isErr(result)) {
+      const error = unwrapErr(result);
+      throw new Error(
+        `Failed to get page "${this.name}" from project "${projectName}": ${error}`
+      );
+    }
+
+    const page = unwrapOk(result);
     return {
       contents: [
         {
@@ -35,20 +45,6 @@ export class PageResource implements Resource {
       ],
     };
   }
-}
-
-function generateDescription(page: BasePage): string {
-  return [
-    `Title: ${page.title}`,
-    `Description:`,
-    ...page.descriptions,
-    `Created: ${formatDate(page.created)}`,
-    `Last Updated: ${formatDate(page.updated)}`,
-    `Last Accessed: ${formatDate(page.accessed)}`,
-    `Views: ${page.views}`,
-    `Linked from: ${page.linked} pages`,
-    `Page Rank: ${page.pageRank}`,
-  ].join('\n');
 }
 
 export class Resources<T extends Resource> {
