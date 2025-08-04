@@ -1,4 +1,4 @@
-import type { BasePage } from '@cosense/types/rest';
+import type { PageSummery } from '@cosense/types/rest';
 import type {
   ReadResourceResult,
   Resource,
@@ -13,7 +13,7 @@ export class PageResource implements Resource {
   readonly mimeType?: string;
   [key: string]: unknown;
 
-  constructor(page: BasePage) {
+  constructor(page: PageSummery) {
     this.uri = `cosense:///${page.title}`;
     this.mimeType = 'text/plain';
     this.name = page.title;
@@ -37,7 +37,7 @@ export class PageResource implements Resource {
   }
 }
 
-function generateDescription(page: BasePage): string {
+function generateDescription(page: PageSummery): string {
   return [
     `Title: ${page.title}`,
     `Description:`,
@@ -47,7 +47,6 @@ function generateDescription(page: BasePage): string {
     `Last Accessed: ${formatDate(page.accessed)}`,
     `Views: ${page.views}`,
     `Linked from: ${page.linked} pages`,
-    `Page Rank: ${page.pageRank}`,
   ].join('\n');
 }
 
