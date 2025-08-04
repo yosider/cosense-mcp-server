@@ -43,8 +43,7 @@ export class Handlers {
     pageList.pages.forEach((page) => {
       this.pageResources.add(new PageResource(page));
     });
-    // output to stderr to avoid conflict with StdioServerTransport
-    logger.error(`Found ${this.pageResources.count} resources`);
+    logger.log(`Found ${this.pageResources.count} resources`);
   }
 
   async handleListResources(): Promise<ListResourcesResult> {
