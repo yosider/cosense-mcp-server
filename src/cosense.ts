@@ -1,5 +1,4 @@
 import {
-  getPage as _getPage,
   listPages as _listPages,
   searchForPages as _searchForPages,
 } from '@cosense/std/rest';
@@ -23,16 +22,6 @@ ${page.relatedPages.links2hop.map((page) => page.title).join('\n')}
 ${page.relatedPages.projectLinks1hop.map((page) => page.title).join('\n')}
 `;
   return text;
-}
-
-export async function getPage(
-  projectName: string,
-  title: string,
-  options: { sid?: string } = {}
-): Promise<Page> {
-  const result = await _getPage(projectName, title, options);
-  const page = unwrap(result)!;
-  return page;
 }
 
 export async function listPages(

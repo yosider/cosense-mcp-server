@@ -1,5 +1,7 @@
+import { getPage } from '@cosense/std/rest';
 import type { CallToolResult } from '@modelcontextprotocol/sdk/types.js';
-import { getPage, pageToText } from '../cosense.js';
+import { isErr, unwrapErr, unwrapOk } from 'option-t/plain_result';
+import { pageToText } from '../cosense.js';
 import type { Tool, ToolContext } from './types.js';
 
 type GetPageArgs = {
@@ -23,7 +25,22 @@ export const getPageTool: Tool<GetPageArgs> = {
     { pageTitle }: GetPageArgs,
     { projectName, cosenseOptions }: ToolContext
   ): Promise<CallToolResult> {
-    const page = await getPage(projectName, pageTitle, cosenseOptions);
+    const result = await getPage(projectName, pageTitle, cosenseOptions);
+
+    if (isErr(result)) {
+      const error = unwrapErr(result);
+      return {
+        content: [
+          {
+            type: 'text',
+            text: `Error: Failed to get page "${pageTitle}" from project "${projectName}": ${error}`,
+          },
+        ],
+        isError: true,
+      };
+    }
+
+    const page = unwrapOk(result);
     return {
       content: [
         {

@@ -1,9 +1,11 @@
+import { getPage } from '@cosense/std/rest';
 import type { PageSummery } from '@cosense/types/rest';
 import type {
   ReadResourceResult,
   Resource,
 } from '@modelcontextprotocol/sdk/types.js';
-import { getPage, pageToText } from './cosense.js';
+import { isErr, unwrapErr, unwrapOk } from 'option-t/plain_result';
+import { pageToText } from './cosense.js';
 import { formatDate } from './utils.js';
 
 export class PageResource implements Resource {
@@ -24,7 +26,16 @@ export class PageResource implements Resource {
     projectName: string,
     options?: { sid?: string }
   ): Promise<ReadResourceResult> {
-    const page = await getPage(projectName, this.name, options);
+    const result = await getPage(projectName, this.name, options);
+
+    if (isErr(result)) {
+      const error = unwrapErr(result);
+      throw new Error(
+        `Failed to get page "${this.name}" from project "${projectName}": ${error}`
+      );
+    }
+
+    const page = unwrapOk(result);
     return {
       contents: [
         {
