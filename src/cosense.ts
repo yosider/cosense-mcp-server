@@ -1,6 +1,4 @@
-import { searchForPages as _searchForPages } from '@cosense/std/rest';
-import type { Page, PageSummery, SearchResult } from '@cosense/types/rest';
-import { type Result, isErr, unwrapErr, unwrapOk } from 'option-t/plain_result';
+import type { Page, PageSummery } from '@cosense/types/rest';
 import { logger } from './utils/logger.js';
 
 export function pageToText(page: Page): string {
@@ -19,23 +17,6 @@ ${page.relatedPages.links2hop.map((page) => page.title).join('\n')}
 ${page.relatedPages.projectLinks1hop.map((page) => page.title).join('\n')}
 `;
   return text;
-}
-
-export async function searchForPages(
-  query: string,
-  projectName: string,
-  options: { sid?: string } = {}
-): Promise<SearchResult> {
-  const result = await _searchForPages(query, projectName, options);
-  const searchResult = unwrap(result)!;
-  return searchResult;
-}
-
-function unwrap<T>(result: Result<T, unknown>): T {
-  if (isErr(result)) {
-    throw unwrapErr(result);
-  }
-  return unwrapOk(result);
 }
 
 export function generateDescription(page: PageSummery): string {

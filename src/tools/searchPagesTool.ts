@@ -1,6 +1,7 @@
+import { searchForPages } from '@cosense/std/rest';
 import type { FoundPage, SearchResult } from '@cosense/types/rest';
 import type { CallToolResult } from '@modelcontextprotocol/sdk/types.js';
-import { searchForPages } from '../cosense.js';
+import { isErr, unwrapErr, unwrapOk } from 'option-t/plain_result';
 import type { Tool, ToolContext } from './types.js';
 
 type SearchPagesArgs = {
@@ -28,7 +29,22 @@ async function execute(
   { query }: SearchPagesArgs,
   { projectName, cosenseOptions }: ToolContext
 ): Promise<CallToolResult> {
-  const searchResult = await searchForPages(query, projectName, cosenseOptions);
+  const result = await searchForPages(query, projectName, cosenseOptions);
+
+  if (isErr(result)) {
+    const error = unwrapErr(result);
+    return {
+      content: [
+        {
+          type: 'text',
+          text: `Error: Failed to search pages in project "${projectName}" with query "${query}": ${error}`,
+        },
+      ],
+      isError: true,
+    };
+  }
+
+  const searchResult = unwrapOk(result);
   return {
     content: [
       {
