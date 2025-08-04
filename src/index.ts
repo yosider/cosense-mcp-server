@@ -11,6 +11,7 @@ import {
 import dotenv from 'dotenv';
 import { getConfig } from './config.js';
 import { Handlers } from './handlers.js';
+import { getPackageVersion } from './utils.js';
 import { logger } from './utils/logger.js';
 
 dotenv.config();
@@ -22,7 +23,7 @@ async function main() {
   const server = new Server(
     {
       name: 'cosense-mcp-server',
-      version: '0.2.2',
+      version: getPackageVersion(),
     },
     {
       capabilities: {
