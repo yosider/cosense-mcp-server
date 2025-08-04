@@ -5,8 +5,7 @@ import type {
   Resource,
 } from '@modelcontextprotocol/sdk/types.js';
 import { isErr, unwrapErr, unwrapOk } from 'option-t/plain_result';
-import { pageToText } from './cosense.js';
-import { formatDate } from './utils.js';
+import { generateDescription, pageToText } from './cosense.js';
 
 export class PageResource implements Resource {
   readonly uri: string;
@@ -46,19 +45,6 @@ export class PageResource implements Resource {
       ],
     };
   }
-}
-
-function generateDescription(page: PageSummery): string {
-  return [
-    `Title: ${page.title}`,
-    `Description:`,
-    ...page.descriptions,
-    `Created: ${formatDate(page.created)}`,
-    `Last Updated: ${formatDate(page.updated)}`,
-    `Last Accessed: ${formatDate(page.accessed)}`,
-    `Views: ${page.views}`,
-    `Linked from: ${page.linked} pages`,
-  ].join('\n');
 }
 
 export class Resources<T extends Resource> {
