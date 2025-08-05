@@ -1,3 +1,5 @@
+[![MseeP.ai Security Assessment Badge](https://mseep.net/pr/yosider-cosense-mcp-server-badge.png)](https://mseep.ai/app/yosider-cosense-mcp-server)
+
 # Cosense MCP Server
 
 A MCP server for [Cosense](https://cosen.se).
