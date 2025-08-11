@@ -1,58 +1,50 @@
 import { searchForPages } from '@cosense/std/rest';
 import type { FoundPage, SearchResult } from '@cosense/types/rest';
-import type { CallToolResult } from '@modelcontextprotocol/sdk/types.js';
+import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { isErr, unwrapErr, unwrapOk } from 'option-t/plain_result';
-import type { Tool, ToolContext } from './types.js';
+import { z } from 'zod';
+import type { Config } from '../config.js';
 
-type SearchPagesArgs = {
-  query: string;
-};
+const SearchPagesArgsSchema = z.object({
+  query: z.string().describe('Search query string (space separated)'),
+});
 
-export const searchPagesTool: Tool<SearchPagesArgs> = {
-  name: 'search_pages',
-  description:
+export function registerSearchPagesTool(server: McpServer, config: Config) {
+  server.tool(
+    'search_pages',
     'Search for pages containing the specified query string in the Cosense project.',
-  inputSchema: {
-    type: 'object' as const,
-    properties: {
-      query: {
-        type: 'string',
-        description: 'Search query string (space separated)',
-      },
-    },
-    required: ['query'],
-  },
-  execute,
-};
+    SearchPagesArgsSchema.shape,
+    async ({ query }) => {
+      const cosenseOptions = {
+        sid: config.cosenseSid,
+      };
 
-async function execute(
-  { query }: SearchPagesArgs,
-  { projectName, cosenseOptions }: ToolContext
-): Promise<CallToolResult> {
-  const result = await searchForPages(query, projectName, cosenseOptions);
+      const result = await searchForPages(query, config.projectName, cosenseOptions);
 
-  if (isErr(result)) {
-    const error = unwrapErr(result);
-    return {
-      content: [
-        {
-          type: 'text',
-          text: `Error: Failed to search pages in project "${projectName}" with query "${query}": ${error}`,
-        },
-      ],
-      isError: true,
-    };
-  }
+      if (isErr(result)) {
+        const error = unwrapErr(result);
+        return {
+          content: [
+            {
+              type: 'text',
+              text: `Error: Failed to search pages in project "${config.projectName}" with query "${query}": ${error}`,
+            },
+          ],
+          isError: true,
+        };
+      }
 
-  const searchResult = unwrapOk(result);
-  return {
-    content: [
-      {
-        type: 'text',
-        text: searchResultToText(searchResult),
-      },
-    ],
-  };
+      const searchResult = unwrapOk(result);
+      return {
+        content: [
+          {
+            type: 'text',
+            text: searchResultToText(searchResult),
+          },
+        ],
+      };
+    }
+  );
 }
 
 function searchResultToText({

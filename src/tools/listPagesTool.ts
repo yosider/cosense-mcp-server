@@ -1,48 +1,45 @@
 import { listPages } from '@cosense/std/rest';
-import type { CallToolResult } from '@modelcontextprotocol/sdk/types.js';
+import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { isErr, unwrapErr, unwrapOk } from 'option-t/plain_result';
+import type { Config } from '../config.js';
 import { generateDescription } from '../cosense.js';
-import type { Tool, ToolContext } from './types.js';
 
-type ListPagesArgs = Record<string, never>;
+export function registerListPagesTool(server: McpServer, config: Config) {
+  server.tool(
+    'list_pages',
+    'List Cosense pages in the project.',
+    {},
+    async () => {
+      const cosenseOptions = {
+        sid: config.cosenseSid,
+      };
 
-export const listPagesTool: Tool<ListPagesArgs> = {
-  name: 'list_pages',
-  description: 'List Cosense pages in the project.',
-  inputSchema: {
-    type: 'object' as const,
-    properties: {},
-    required: [],
-  },
-  async execute(
-    _args: ListPagesArgs,
-    { projectName, cosenseOptions }: ToolContext
-  ): Promise<CallToolResult> {
-    const result = await listPages(projectName, cosenseOptions);
+      const result = await listPages(config.projectName, cosenseOptions);
 
-    if (isErr(result)) {
-      const error = unwrapErr(result);
+      if (isErr(result)) {
+        const error = unwrapErr(result);
+        return {
+          content: [
+            {
+              type: 'text',
+              text: `Error: Failed to list pages from project "${config.projectName}": ${error}`,
+            },
+          ],
+          isError: true,
+        };
+      }
+
+      const pageList = unwrapOk(result);
       return {
         content: [
           {
             type: 'text',
-            text: `Error: Failed to list pages from project "${projectName}": ${error}`,
+            text: pageList.pages
+              .map((page) => generateDescription(page))
+              .join('\n-----\n'),
           },
         ],
-        isError: true,
       };
     }
-
-    const pageList = unwrapOk(result);
-    return {
-      content: [
-        {
-          type: 'text',
-          text: pageList.pages
-            .map((page) => generateDescription(page))
-            .join('\n-----\n'),
-        },
-      ],
-    };
-  },
-};
+  );
+}
