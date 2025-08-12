@@ -8,7 +8,7 @@ export function getConfig(): Config {
   const projectName = process.env.COSENSE_PROJECT_NAME;
 
   if (!projectName) {
-    throw new Error("COSENSE_PROJECT_NAME is not set");
+    throw new Error('COSENSE_PROJECT_NAME is not set');
   }
 
   return {

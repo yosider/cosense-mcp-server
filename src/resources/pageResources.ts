@@ -26,7 +26,7 @@ export async function registerPageResources(server: McpServer, config: Config) {
   // Register individual page resources
   for (const page of pageList.pages) {
     const uri = `cosense:///${page.title}`;
-    
+
     server.resource(
       page.title,
       uri,
@@ -36,7 +36,11 @@ export async function registerPageResources(server: McpServer, config: Config) {
         mimeType: 'text/plain',
       },
       async () => {
-        const pageResult = await getPage(config.projectName, page.title, cosenseOptions);
+        const pageResult = await getPage(
+          config.projectName,
+          page.title,
+          cosenseOptions
+        );
 
         if (isErr(pageResult)) {
           const error = unwrapErr(pageResult);

@@ -10,12 +10,16 @@ export function registerInsertLinesTool(server: McpServer, config: Config) {
     'Insert lines after the specified target line in a Cosense page. If the target line is not found, append to the end of the page.',
     {
       title: z.string().describe('Title of the page to modify'),
-      targetLineText: z.string().describe(
-        'Text of the line after which to insert new content. If not found, content will be appended to the end.'
-      ),
-      text: z.string().describe(
-        'Text to insert. If you want to insert multiple lines, use \\n for line breaks.'
-      ),
+      targetLineText: z
+        .string()
+        .describe(
+          'Text of the line after which to insert new content. If not found, content will be appended to the end.'
+        ),
+      text: z
+        .string()
+        .describe(
+          'Text to insert. If you want to insert multiple lines, use \\n for line breaks.'
+        ),
     },
     async ({ title, targetLineText, text }) => {
       const cosenseOptions = {

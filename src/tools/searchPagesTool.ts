@@ -17,7 +17,11 @@ export function registerSearchPagesTool(server: McpServer, config: Config) {
         sid: config.cosenseSid,
       };
 
-      const result = await searchForPages(query, config.projectName, cosenseOptions);
+      const result = await searchForPages(
+        query,
+        config.projectName,
+        cosenseOptions
+      );
 
       if (isErr(result)) {
         const error = unwrapErr(result);
