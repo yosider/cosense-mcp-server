@@ -5,15 +5,13 @@ import { isErr, unwrapErr, unwrapOk } from 'option-t/plain_result';
 import { z } from 'zod';
 import type { Config } from '../config.js';
 
-const SearchPagesArgsSchema = z.object({
-  query: z.string().describe('Search query string (space separated)'),
-});
-
 export function registerSearchPagesTool(server: McpServer, config: Config) {
   server.tool(
     'search_pages',
     'Search for pages containing the specified query string in the Cosense project.',
-    SearchPagesArgsSchema.shape,
+    {
+      query: z.string().describe('Search query string (space separated)'),
+    },
     async ({ query }) => {
       const cosenseOptions = {
         sid: config.cosenseSid,

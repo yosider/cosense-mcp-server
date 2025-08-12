@@ -4,29 +4,27 @@ import { unwrapErr } from 'option-t/plain_result';
 import { z } from 'zod';
 import type { Config } from '../config.js';
 
-const InsertLinesArgsSchema = z.object({
-  pageTitle: z.string().describe('Title of the page to modify'),
-  targetLineText: z.string().describe(
-    'Text of the line after which to insert new content. If not found, content will be appended to the end.'
-  ),
-  text: z.string().describe(
-    'Text to insert. If you want to insert multiple lines, use \\n for line breaks.'
-  ),
-});
-
 export function registerInsertLinesTool(server: McpServer, config: Config) {
   server.tool(
     'insert_lines',
     'Insert lines after the specified target line in a Cosense page. If the target line is not found, append to the end of the page.',
-    InsertLinesArgsSchema.shape,
-    async ({ pageTitle, targetLineText, text }) => {
+    {
+      title: z.string().describe('Title of the page to modify'),
+      targetLineText: z.string().describe(
+        'Text of the line after which to insert new content. If not found, content will be appended to the end.'
+      ),
+      text: z.string().describe(
+        'Text to insert. If you want to insert multiple lines, use \\n for line breaks.'
+      ),
+    },
+    async ({ title, targetLineText, text }) => {
       const cosenseOptions = {
         sid: config.cosenseSid,
       };
 
       const result = await patch(
         config.projectName,
-        pageTitle,
+        title,
         (lines) => {
           // find the index of the target line
           let index = lines.findIndex((line) => line.text === targetLineText);

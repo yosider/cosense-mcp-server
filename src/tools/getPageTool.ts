@@ -5,21 +5,19 @@ import { z } from 'zod';
 import type { Config } from '../config.js';
 import { pageToText } from '../cosense.js';
 
-const GetPageArgsSchema = z.object({
-  pageTitle: z.string().describe('Title of the page'),
-});
-
 export function registerGetPageTool(server: McpServer, config: Config) {
   server.tool(
     'get_page',
     'Get a page with the specified title from the Cosense project.',
-    GetPageArgsSchema.shape,
-    async ({ pageTitle }) => {
+    {
+      title: z.string().describe('Title of the page'),
+    },
+    async ({ title }) => {
       const cosenseOptions = {
         sid: config.cosenseSid,
       };
 
-      const result = await getPage(config.projectName, pageTitle, cosenseOptions);
+      const result = await getPage(config.projectName, title, cosenseOptions);
 
       if (isErr(result)) {
         const error = unwrapErr(result);
@@ -27,7 +25,7 @@ export function registerGetPageTool(server: McpServer, config: Config) {
           content: [
             {
               type: 'text',
-              text: `Error: Failed to get page "${pageTitle}" from project "${config.projectName}": ${error}`,
+              text: `Error: Failed to get page "${title}" from project "${config.projectName}": ${error}`,
             },
           ],
           isError: true,

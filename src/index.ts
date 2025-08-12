@@ -18,7 +18,7 @@ import { registerPageResources } from './resources/pageResources.js';
 
 dotenv.config();
 
-async function main() {
+try {
   const config = getConfig();
 
   const server = new McpServer(
@@ -41,14 +41,15 @@ async function main() {
   registerListPagesTool(server, config);
   registerSearchPagesTool(server, config);
 
-  // Register resources
-  await registerPageResources(server, config);
+  // Start page resource registration asynchronously
+  const resourcesPromise = registerPageResources(server, config);
 
   const transport = new StdioServerTransport();
   await server.connect(transport);
-}
 
-main().catch((error) => {
+  // Now wait for resource registration to complete
+  await resourcesPromise;
+} catch (error) {
   logger.error('Server error:', error);
   process.exit(1);
-});
+}
