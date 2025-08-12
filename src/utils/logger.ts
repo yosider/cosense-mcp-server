@@ -12,7 +12,7 @@ export const logger = {
       console.log(...args);
     }
   },
-  
+
   /**
    * Debug messages in development environment only
    */
@@ -21,18 +21,18 @@ export const logger = {
       console.debug(...args);
     }
   },
-  
+
   /**
    * Error messages in all environments
    */
   error: (...args: unknown[]): void => {
     console.error(...args);
   },
-  
+
   /**
    * Warning messages in all environments
    */
   warn: (...args: unknown[]): void => {
     console.warn(...args);
-  }
+  },
 };
