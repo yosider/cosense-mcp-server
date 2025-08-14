@@ -5,7 +5,7 @@ import { z } from 'zod';
 import type { Config } from '../config.js';
 import { pageToText } from '../cosense.js';
 
-export function registerGetPageTool(server: McpServer, config: Config) {
+export const registerGetPageTool = (server: McpServer, config: Config) =>
   server.tool(
     'get_page',
     'Get a page with the specified title from the Cosense project.',
@@ -43,4 +43,3 @@ export function registerGetPageTool(server: McpServer, config: Config) {
       };
     }
   );
-}

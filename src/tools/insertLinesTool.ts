@@ -4,7 +4,7 @@ import { unwrapErr } from 'option-t/plain_result';
 import { z } from 'zod';
 import type { Config } from '../config.js';
 
-export function registerInsertLinesTool(server: McpServer, config: Config) {
+export const registerInsertLinesTool = (server: McpServer, config: Config) =>
   server.tool(
     'insert_lines',
     'Insert lines after the specified target line in a Cosense page. If the target line is not found, append to the end of the page.',
@@ -68,4 +68,3 @@ export function registerInsertLinesTool(server: McpServer, config: Config) {
       }
     }
   );
-}

@@ -4,7 +4,7 @@ import { isErr, unwrapErr, unwrapOk } from 'option-t/plain_result';
 import type { Config } from '../config.js';
 import { generateDescription } from '../cosense.js';
 
-export function registerListPagesTool(server: McpServer, config: Config) {
+export const registerListPagesTool = (server: McpServer, config: Config) =>
   server.tool(
     'list_pages',
     'List Cosense pages in the project.',
@@ -42,4 +42,3 @@ export function registerListPagesTool(server: McpServer, config: Config) {
       };
     }
   );
-}

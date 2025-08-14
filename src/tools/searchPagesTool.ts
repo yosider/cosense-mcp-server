@@ -5,7 +5,7 @@ import { isErr, unwrapErr, unwrapOk } from 'option-t/plain_result';
 import { z } from 'zod';
 import type { Config } from '../config.js';
 
-export function registerSearchPagesTool(server: McpServer, config: Config) {
+export const registerSearchPagesTool = (server: McpServer, config: Config) =>
   server.tool(
     'search_pages',
     'Search for pages containing the specified query string in the Cosense project.',
@@ -47,7 +47,6 @@ export function registerSearchPagesTool(server: McpServer, config: Config) {
       };
     }
   );
-}
 
 function searchResultToText({
   searchQuery,
