@@ -32,7 +32,8 @@
     "@cosense/std": "npm:@jsr/cosense__std@^0.29.14",
     "@modelcontextprotocol/sdk": "^1.17.1",
     "dotenv": "^17.2.1",
-    "option-t": "^53.0.0"
+    "option-t": "^53.0.0",
+    "zod": "^3.25.76"
   },
   "devDependencies": {
     "@cosense/types": "npm:@jsr/cosense__types@^0.10.10",

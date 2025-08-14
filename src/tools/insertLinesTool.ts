@@ -55,7 +55,16 @@ export function registerInsertLinesTool(server: McpServer, config: Config) {
           ],
         };
       } else {
-        throw unwrapErr(result);
+        const error = unwrapErr(result);
+        return {
+          content: [
+            {
+              type: 'text',
+              text: `Error: Failed to insert lines in page "${title}": ${error}`,
+            },
+          ],
+          isError: true,
+        };
       }
     }
   );
