@@ -41,14 +41,11 @@ try {
   registerListPagesTool(server, config);
   registerSearchPagesTool(server, config);
 
-  // Start page resource registration asynchronously
-  const resourcesPromise = registerPageResources(server, config);
+  // Register page resources
+  await registerPageResources(server, config);
 
   const transport = new StdioServerTransport();
   await server.connect(transport);
-
-  // Now wait for resource registration to complete
-  await resourcesPromise;
 } catch (error) {
   logger.error('Server error:', error);
   process.exit(1);
