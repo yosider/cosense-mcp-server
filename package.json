@@ -27,7 +27,7 @@
     "format:check": "prettier --check \"src/**/*.ts\"",
     "start": "tsx src/index.ts",
     "start:dev": "tsx watch src/index.ts",
-    "inspect": "npx @modelcontextprotocol/inspector npm run start"
+    "inspect": "npx @modelcontextprotocol/inspector -- tsx src/index.ts"
   },
   "dependencies": {
     "@cosense/std": "npm:@jsr/cosense__std@^0.29.14",

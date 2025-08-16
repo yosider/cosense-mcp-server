@@ -16,7 +16,7 @@ import { registerSearchPagesTool } from './tools/searchPagesTool.js';
 // Import resources
 import { registerPageResources } from './resources/pageResources.js';
 
-dotenv.config();
+dotenv.config({ quiet: true });
 
 try {
   const config = getConfig();
