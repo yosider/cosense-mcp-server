@@ -1,72 +1,70 @@
 import { patch } from '@cosense/std/websocket';
-import type { CallToolResult } from '@modelcontextprotocol/sdk/types.js';
+import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { unwrapErr } from 'option-t/plain_result';
-import type { Tool, ToolContext } from './types.js';
+import { z } from 'zod';
+import type { Config } from '../config.js';
 
-type InsertLinesArgs = {
-  pageTitle: string;
-  targetLineText: string;
-  text: string;
-};
-
-export const insertLinesTool: Tool<InsertLinesArgs> = {
-  name: 'insert_lines',
-  description:
+export const registerInsertLinesTool = (server: McpServer, config: Config) =>
+  server.tool(
+    'insert_lines',
     'Insert lines after the specified target line in a Cosense page. If the target line is not found, append to the end of the page.',
-  inputSchema: {
-    type: 'object' as const,
-    properties: {
-      pageTitle: {
-        type: 'string',
-        description: 'Title of the page to modify',
-      },
-      targetLineText: {
-        type: 'string',
-        description:
-          'Text of the line after which to insert new content. If not found, content will be appended to the end.',
-      },
-      text: {
-        type: 'string',
-        description:
-          'Text to insert. If you want to insert multiple lines, use \\n for line breaks.',
-      },
+    {
+      title: z.string().describe('Title of the page to modify'),
+      targetLineText: z
+        .string()
+        .describe(
+          'Text of the line after which to insert new content. If not found, content will be appended to the end.'
+        ),
+      text: z
+        .string()
+        .describe(
+          'Text to insert. If you want to insert multiple lines, use \\n for line breaks.'
+        ),
     },
-    required: ['pageTitle', 'targetLineText', 'text'],
-  },
-  async execute(
-    { pageTitle, targetLineText, text }: InsertLinesArgs,
-    { projectName, cosenseOptions }: ToolContext
-  ): Promise<CallToolResult> {
-    const result = await patch(
-      projectName,
-      pageTitle,
-      (lines) => {
-        // find the index of the target line
-        let index = lines.findIndex((line) => line.text === targetLineText);
-        // if not found, append to the end
-        index = index < 0 ? lines.length : index;
-        // insert the text
-        const linesText = lines.map((line) => line.text);
-        return [
-          ...linesText.slice(0, index + 1),
-          ...text.split('\n'),
-          ...linesText.slice(index + 1),
-        ];
-      },
-      cosenseOptions
-    );
-
-    if (result.ok) {
-      return {
-        content: [
-          {
-            type: 'text',
-            text: `Successfully inserted lines.`,
-          },
-        ],
+    async ({ title, targetLineText, text }) => {
+      const cosenseOptions = {
+        sid: config.cosenseSid,
       };
-    } else {
-      throw unwrapErr(result);
+
+      const result = await patch(
+        config.projectName,
+        title,
+        (lines) => {
+          // find the index of the target line
+          let index = lines.findIndex((line) => line.text === targetLineText);
+          // if not found, append to the end
+          index = index < 0 ? lines.length : index;
+          // insert the text
+          const linesText = lines.map((line) => line.text);
+          return [
+            ...linesText.slice(0, index + 1),
+            ...text.split('\n'),
+            ...linesText.slice(index + 1),
+          ];
+        },
+        cosenseOptions
+      );
+
+      if (result.ok) {
+        return {
+          content: [
+            {
+              type: 'text',
+              text: `Successfully inserted lines.`,
+            },
+          ],
+        };
+      } else {
+        const error = unwrapErr(result);
+        return {
+          content: [
+            {
+              type: 'text',
+              text: `Error: Failed to insert lines in page "${title}": ${error}`,
+            },
+          ],
+          isError: true,
+        };
+      }
     }
-  },
-};
+  );

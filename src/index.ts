@@ -1,26 +1,27 @@
 #!/usr/bin/env node
 
-import { Server } from '@modelcontextprotocol/sdk/server/index.js';
+import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
-import {
-  CallToolRequestSchema,
-  ListResourcesRequestSchema,
-  ListToolsRequestSchema,
-  ReadResourceRequestSchema,
-} from '@modelcontextprotocol/sdk/types.js';
 import dotenv from 'dotenv';
 import { getConfig } from './config.js';
-import { Handlers } from './handlers.js';
 import { getPackageVersion } from './utils.js';
 import { logger } from './utils/logger.js';
 
+// Import tools
+import { registerGetPageTool } from './tools/getPageTool.js';
+import { registerInsertLinesTool } from './tools/insertLinesTool.js';
+import { registerListPagesTool } from './tools/listPagesTool.js';
+import { registerSearchPagesTool } from './tools/searchPagesTool.js';
+
+// Import resources
+import { registerPageResources } from './resources/pageResources.js';
+
 dotenv.config();
 
-async function main() {
+try {
   const config = getConfig();
-  const handlers = await Handlers.create(config);
 
-  const server = new Server(
+  const server = new McpServer(
     {
       name: 'cosense-mcp-server',
       version: getPackageVersion(),
@@ -34,24 +35,21 @@ async function main() {
     }
   );
 
-  server.setRequestHandler(ListResourcesRequestSchema, () =>
-    handlers.handleListResources()
-  );
-  server.setRequestHandler(ReadResourceRequestSchema, (req) =>
-    handlers.handleReadResource(req)
-  );
-  server.setRequestHandler(ListToolsRequestSchema, () =>
-    handlers.handleListTools()
-  );
-  server.setRequestHandler(CallToolRequestSchema, (req) =>
-    handlers.handleCallTool(req)
-  );
+  // Register tools
+  registerGetPageTool(server, config);
+  registerInsertLinesTool(server, config);
+  registerListPagesTool(server, config);
+  registerSearchPagesTool(server, config);
+
+  // Start page resource registration asynchronously
+  const resourcesPromise = registerPageResources(server, config);
 
   const transport = new StdioServerTransport();
   await server.connect(transport);
-}
 
-main().catch((error) => {
+  // Now wait for resource registration to complete
+  await resourcesPromise;
+} catch (error) {
   logger.error('Server error:', error);
   process.exit(1);
-});
+}
