@@ -1,65 +1,72 @@
-import { getPage, listPages } from '@cosense/std/rest';
-import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
-import { isErr, unwrapErr, unwrapOk } from 'option-t/plain_result';
+import { getPage, searchForPages } from '@cosense/std/unstable-api';
+import {
+  ResourceTemplate,
+  type McpServer,
+} from '@modelcontextprotocol/sdk/server/mcp.js';
 import type { Config } from '../config.js';
-import { generateDescription, pageToText } from '../cosense.js';
-import { logger } from '../utils/logger.js';
+import { pageToText } from '../cosense.js';
+import { sendLoggingMessage } from '../logging.js';
+import { UriTemplate } from '@modelcontextprotocol/sdk/shared/uriTemplate.js';
+import { assert, isString } from '@core/unknownutil';
 
-export async function registerPageResources(server: McpServer, config: Config) {
-  const cosenseOptions = {
-    sid: config.cosenseSid,
-  };
-
-  // First, load all pages to populate the resource list
-  const result = await listPages(config.projectName, cosenseOptions);
-
-  if (isErr(result)) {
-    const error = unwrapErr(result);
-    throw new Error(
-      `Failed to load pages from project "${config.projectName}": ${error}`
-    );
-  }
-
-  const pageList = unwrapOk(result);
-  logger.log(`Found ${pageList.pages.length} resources`);
-
-  // Register individual page resources
-  for (const page of pageList.pages) {
-    const uri = `cosense:///${page.title}`;
-
-    server.resource(
-      page.title,
-      uri,
+export function registerPageResources(server: McpServer, config: Config) {
+  server.registerResource(
+    'cosense pages',
+    new ResourceTemplate(
+      new UriTemplate(`cosense://${config.projectName}/{+title}`),
       {
-        name: page.title,
-        description: generateDescription(page),
-        mimeType: 'text/plain',
-      },
-      async () => {
-        const pageResult = await getPage(
-          config.projectName,
-          page.title,
-          cosenseOptions
-        );
-
-        if (isErr(pageResult)) {
-          const error = unwrapErr(pageResult);
-          throw new Error(
-            `Failed to get page "${page.title}" from project "${config.projectName}": ${error}`
-          );
-        }
-
-        const pageData = unwrapOk(pageResult);
-        return {
-          contents: [
-            {
-              uri: uri,
-              mimeType: 'text/plain',
-              text: pageToText(pageData),
-            },
-          ],
-        };
+        list: undefined,
+        complete: {
+          title: async (title) => {
+            const res = await searchForPages(config.projectName, title, {
+              sid: config.cosenseSid,
+            });
+            if (!res.ok)
+              throw new Error(`Error: ${(await res.json()).message}`, {
+                cause: res,
+              });
+            const { pages } = await res.json();
+            return pages.map(({ title }) => title);
+          },
+        },
       }
-    );
-  }
+    ),
+    {
+      title: `Cosense Pages in /${config.projectName}`,
+      mimeType: 'text/plain',
+    },
+    async (uri, { title }) => {
+      assert(title, isString);
+      title = decodeURIComponent(title);
+      sendLoggingMessage(server.server, {
+        level: 'info',
+        data: { uri, title },
+      });
+
+      const res = await getPage(config.projectName, title, {
+        sid: config.cosenseSid,
+      });
+      if (!res.ok) {
+        const error = await res.json();
+        sendLoggingMessage(server.server, {
+          level: 'error',
+          data: { error, url: res.url },
+        });
+        throw new Error(`Error: ${error.message}`, { cause: res });
+      }
+      const page = await res.json();
+      sendLoggingMessage(server.server, {
+        level: 'info',
+        data: page.relatedPages,
+      });
+      return {
+        contents: [
+          {
+            uri: uri.href,
+            text: pageToText(page),
+          },
+        ],
+      };
+    }
+  );
 }

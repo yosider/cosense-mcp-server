@@ -29,6 +29,7 @@ try {
     { capabilities: { logging: {} } }
   );
 
+  // Register page resources
   registerPageResources(server, config);
 
   // Register tools
@@ -37,8 +38,7 @@ try {
   registerListPagesTool(server, config);
   registerSearchPagesTool(server, config);
 
-  // Register page resources
-  await registerPageResources(server, config);
+  registerSetLoggingLevel(server.server);
 
   const transport = new StdioServerTransport();
   await server.connect(transport);

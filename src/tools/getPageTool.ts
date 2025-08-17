@@ -26,7 +26,7 @@ export const registerGetPageTool = (server: McpServer, config: Config) =>
           content: [
             {
               type: 'text',
-              text: `Error: Failed to get page "${title}" from project "${config.projectName}": ${error}`,
+              text: `Error: Failed to get page "${title}" from project "${config.projectName}": ${JSON.stringify(error)}`,
             },
           ],
           isError: true,
