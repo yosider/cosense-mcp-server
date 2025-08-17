@@ -5,7 +5,6 @@ import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js'
 import dotenv from 'dotenv';
 import { getConfig } from './config.js';
 import { getPackageVersion } from './utils.js';
-import { logger } from './utils/logger.js';
 
 // Import tools
 import { registerGetPageTool } from './tools/getPageTool.js';
@@ -15,6 +14,7 @@ import { registerSearchPagesTool } from './tools/searchPagesTool.js';
 
 // Import resources
 import { registerPageResources } from './resources/pageResources.js';
+import { registerSetLoggingLevel } from './logging.js';
 
 dotenv.config({ quiet: true });
 
@@ -26,14 +26,10 @@ try {
       name: 'cosense-mcp-server',
       version: getPackageVersion(),
     },
-    {
-      capabilities: {
-        resources: {},
-        tools: {},
-        prompts: {},
-      },
-    }
+    { capabilities: { logging: {} } }
   );
+
+  registerPageResources(server, config);
 
   // Register tools
   registerGetPageTool(server, config);
@@ -47,6 +43,6 @@ try {
   const transport = new StdioServerTransport();
   await server.connect(transport);
 } catch (error) {
-  logger.error('Server error:', error);
+  console.error('Server error:', error);
   process.exit(1);
 }

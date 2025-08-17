@@ -30,14 +30,15 @@
     "inspect": "npx @modelcontextprotocol/inspector -- tsx src/index.ts"
   },
   "dependencies": {
-    "@cosense/std": "npm:@jsr/cosense__std@^0.29.14",
+    "@core/unknownutil": "npm:@jsr/core__unknownutil@^4.4.0-pre.0",
+    "@cosense/std": "npm:@jsr/cosense__std@^0.30.0",
     "@modelcontextprotocol/sdk": "^1.17.1",
     "dotenv": "^17.2.1",
     "option-t": "^53.0.0",
     "zod": "^3.25.76"
   },
   "devDependencies": {
-    "@cosense/types": "npm:@jsr/cosense__types@^0.10.10",
+    "@cosense/types": "npm:@jsr/cosense__types@^0.11.0",
     "@eslint/js": "^9.32.0",
     "@types/node": "^24.2.0",
     "@typescript-eslint/eslint-plugin": "^8.38.0",

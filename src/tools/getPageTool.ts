@@ -4,6 +4,7 @@ import { isErr, unwrapErr, unwrapOk } from 'option-t/plain_result';
 import { z } from 'zod';
 import type { Config } from '../config.js';
 import { pageToText } from '../cosense.js';
+import { sendLoggingMessage } from '../logging.js';
 
 export const registerGetPageTool = (server: McpServer, config: Config) =>
   server.tool(
@@ -33,6 +34,10 @@ export const registerGetPageTool = (server: McpServer, config: Config) =>
       }
 
       const page = unwrapOk(result);
+      sendLoggingMessage(server.server, {
+        level: 'info',
+        data: page.relatedPages,
+      });
       return {
         content: [
           {
