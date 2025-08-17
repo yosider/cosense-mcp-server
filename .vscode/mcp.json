@@ -1,0 +1,21 @@
+{
+  // cf. https://code.visualstudio.com/docs/reference/variables-reference#_input-variables
+  "inputs": [
+    {
+      "description": "Enter your Cosense SID, which is used for COSENSE_SID",
+      "id": "cosense-sid",
+      "password": true,
+      "type": "promptString"
+    }
+  ],
+  "servers": {
+    "cosense (dev)": {
+      "command": "npx",
+      "args": ["-y", "."],
+      "env": {
+        "COSENSE_PROJECT_NAME": "git-wiki",
+        "COSENSE_SID": "${input:cosense-sid}"
+      }
+    }
+  }
+}
