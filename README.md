@@ -20,10 +20,6 @@ The following environment variables are required:
   - Required for writing to pages and reading private pages
   - Handle with care as it contains sensitive information
   - For more details, see [scrapboxlab/connect.sid](https://scrapbox.io/scrapboxlab/connect.sid)
-- `NODE_ENV`: Execution environment (`development` or `production`)
-  - Controls logging behavior
-  - In `development` mode, debug logs are displayed
-  - In `production` mode, debug logs are suppressed
 
 ### Run from npm registry
 
@@ -92,7 +88,7 @@ npm run build
 }
 ```
 
-For development debugging, add `"NODE_ENV": "development"` to the `env` section. Note that setting environment variables in a `.env` file won't work due to execution timing - use the MCP client configuration instead.
+For development debugging, use the MCP client configuration instead.
 
 ### Debugging
 

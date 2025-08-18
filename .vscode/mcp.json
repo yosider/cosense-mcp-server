@@ -1,0 +1,23 @@
+{
+  // cf. https://code.visualstudio.com/docs/reference/variables-reference#_input-variables
+  "inputs": [
+    {
+      "description": "Enter your Cosense SID, which is used for COSENSE_SID",
+      "id": "cosense-sid",
+      "password": true,
+      "type": "promptString"
+    }
+  ],
+  "servers": {
+    "cosense-mcp-server": {
+      "args": ["-y", "."],
+      "command": "npx",
+      "dev": {},
+      "env": {
+        "COSENSE_PROJECT_NAME": "yosider",
+        "COSENSE_SID": "${input:cosense-sid}"
+      },
+      "type": "stdio"
+    }
+  }
+}
