@@ -1,4 +1,5 @@
 # Cosense MCP Server
+[![smithery badge](https://smithery.ai/badge/@yosider/cosense-mcp-server)](https://smithery.ai/server/@yosider/cosense-mcp-server)
 
 A MCP server for [Cosense](https://cosen.se).
 
@@ -33,6 +34,15 @@ This package depends on [@cosense/std](https://jsr.io/@cosense/std) and [@cosens
 
 For Linux/macOS:
 
+### Installing via Smithery
+
+To install Cosense for Claude Desktop automatically via [Smithery](https://smithery.ai/server/@yosider/cosense-mcp-server):
+
+```bash
+npx -y @smithery/cli install @yosider/cosense-mcp-server --client claude
+```
+
+### Manual Installation
 ```bash
 echo "@jsr:registry=https://npm.jsr.io" >> ~/.npmrc
 ```

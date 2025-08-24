@@ -1,0 +1,21 @@
+# Smithery configuration file: https://smithery.ai/docs/config#smitheryyaml
+
+startCommand:
+  type: stdio
+  configSchema:
+    # JSON Schema defining the configuration options for the MCP.
+    type: object
+    required:
+      - cosenseProjectName
+    properties:
+      cosenseProjectName:
+        type: string
+        description: The project name for the COSENSE server.
+      cosenseSid:
+        type: string
+        default: ""
+        description: The SID for a private COSENSE project.
+  commandFunction:
+    # A function that produces the CLI command to start the MCP on stdio.
+    |-
+    (config) => ({command: 'node', args: ['build/index.js'], env: {COSENSE_PROJECT_NAME: config.cosenseProjectName, COSENSE_SID: config.cosenseSid}})
