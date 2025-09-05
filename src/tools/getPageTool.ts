@@ -6,11 +6,13 @@ import type { Config } from '../config.js';
 import { pageToText } from '../cosense.js';
 
 export const registerGetPageTool = (server: McpServer, config: Config) =>
-  server.tool(
+  server.registerTool(
     'get_page',
-    'Get a page with the specified title from the Cosense project.',
     {
-      title: z.string().describe('Title of the page'),
+      description: 'Get a page with the specified title from the Cosense project.',
+      inputSchema: {
+        title: z.string().describe('Title of the page'),
+      },
     },
     async ({ title }) => {
       const cosenseOptions = {

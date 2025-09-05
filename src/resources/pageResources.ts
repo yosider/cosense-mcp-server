@@ -27,11 +27,10 @@ export async function registerPageResources(server: McpServer, config: Config) {
   for (const page of pageList.pages) {
     const uri = `cosense:///${page.title}`;
 
-    server.resource(
+    server.registerResource(
       page.title,
       uri,
       {
-        name: page.title,
         description: generateDescription(page),
         mimeType: 'text/plain',
       },

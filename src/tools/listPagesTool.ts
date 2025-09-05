@@ -5,10 +5,11 @@ import type { Config } from '../config.js';
 import { generateDescription } from '../cosense.js';
 
 export const registerListPagesTool = (server: McpServer, config: Config) =>
-  server.tool(
+  server.registerTool(
     'list_pages',
-    'List Cosense pages in the project.',
-    {},
+    {
+      description: 'List Cosense pages in the project.',
+    },
     async () => {
       const cosenseOptions = {
         sid: config.cosenseSid,
