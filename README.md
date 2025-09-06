@@ -115,8 +115,8 @@ If you prefer to run the server from a local copy of this repository, build it f
 ```bash
 git clone https://github.com/yosider/cosense-mcp-server.git
 cd cosense-mcp-server
-npm install
-npm run build
+pnpm install
+pnpm run build
 ```
 
 Then point your MCP client at the local package:
@@ -125,8 +125,7 @@ Then point your MCP client at the local package:
 {
   "mcpServers": {
     "cosense-mcp-server": {
-      "command": "npx",
-      "args": ["-y", "/path/to/cosense-mcp-server"],
+      "command": "/path/to/cosense-mcp-server/build/index.js",
       "env": {
         "COSENSE_PROJECT_NAME": "your_project_name",
         "COSENSE_SID": "your_sid"
@@ -146,7 +145,7 @@ Then point your MCP client at the local package:
 Since MCP servers communicate over stdio, debugging can be challenging. We recommend using the [MCP Inspector](https://github.com/modelcontextprotocol/inspector), which is available as a package script:
 
 ```bash
-npm run inspect
+pnpm run inspect
 ```
 
 The Inspector will provide a URL to access debugging tools in your browser.

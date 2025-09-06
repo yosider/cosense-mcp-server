@@ -11,6 +11,7 @@
     "url": "https://github.com/yosider/cosense-mcp-server"
   },
   "type": "module",
+  "packageManager": "pnpm",
   "bin": {
     "cosense-mcp-server": "./build/index.js"
   },
@@ -19,7 +20,7 @@
   ],
   "scripts": {
     "build": "tsc",
-    "prepare": "npm run build",
+    "prepare": "pnpm run build",
     "watch": "tsc --watch",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
@@ -27,7 +28,7 @@
     "format:check": "prettier --check \"src/**/*.ts\"",
     "start": "tsx src/index.ts",
     "start:dev": "tsx watch src/index.ts",
-    "inspect": "npx @modelcontextprotocol/inspector -- tsx src/index.ts"
+    "inspect": "pnpx @modelcontextprotocol/inspector -- tsx src/index.ts"
   },
   "dependencies": {
     "@cosense/std": "npm:@jsr/cosense__std@^0.29.14",
