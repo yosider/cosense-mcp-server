@@ -9,6 +9,7 @@ export const registerListPagesTool = (server: McpServer, config: Config) =>
     'list_pages',
     {
       description: 'List Cosense pages in the project.',
+      inputSchema: {},
     },
     async () => {
       const cosenseOptions = {
