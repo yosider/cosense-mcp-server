@@ -1,13 +1,17 @@
+import { assert, isString } from '@core/unknownutil';
 import { getPage, searchForPages } from '@cosense/std/unstable-api';
 import {
   ResourceTemplate,
   type McpServer,
 } from '@modelcontextprotocol/sdk/server/mcp.js';
+import { UriTemplate } from '@modelcontextprotocol/sdk/shared/uriTemplate.js';
 import type { Config } from '../config.js';
 import { pageToText } from '../cosense.js';
 import { sendLoggingMessage } from '../logging.js';
-import { UriTemplate } from '@modelcontextprotocol/sdk/shared/uriTemplate.js';
-import { assert, isString } from '@core/unknownutil';
+
+interface PageSuggestion {
+  title: string;
+}
 
 export function registerPageResources(server: McpServer, config: Config) {
   server.registerResource(
@@ -18,6 +22,11 @@ export function registerPageResources(server: McpServer, config: Config) {
         list: undefined,
         complete: {
           title: async (title) => {
+            // Search for pages with at least 2 characters
+            if (!title || title.length < 2) {
+              return [];
+            }
+
             const res = await searchForPages(config.projectName, title, {
               sid: config.cosenseSid,
             });
@@ -26,7 +35,8 @@ export function registerPageResources(server: McpServer, config: Config) {
                 cause: res,
               });
             const { pages } = await res.json();
-            return pages.map(({ title }) => title);
+
+            return sortPagesByRelevance(pages, title);
           },
         },
       }
@@ -69,4 +79,36 @@ export function registerPageResources(server: McpServer, config: Config) {
       };
     }
   );
+}
+
+/**
+ * Sort pages by relevance to the query.
+ */
+function sortPagesByRelevance(
+  pages: PageSuggestion[],
+  query: string
+): string[] {
+  const queryLower = query.toLowerCase();
+
+  return pages
+    .sort((a, b) => {
+      const aTitleLower = a.title.toLowerCase();
+      const bTitleLower = b.title.toLowerCase();
+
+      // prefix match
+      const aPrefix = aTitleLower.startsWith(queryLower);
+      const bPrefix = bTitleLower.startsWith(queryLower);
+      if (aPrefix && !bPrefix) return -1;
+      if (!aPrefix && bPrefix) return 1;
+
+      // substring match
+      const aContains = aTitleLower.includes(queryLower);
+      const bContains = bTitleLower.includes(queryLower);
+      if (aContains && !bContains) return -1;
+      if (!aContains && bContains) return 1;
+
+      // sort by length (shorter first)
+      return a.title.length - b.title.length;
+    })
+    .map((page) => page.title);
 }
