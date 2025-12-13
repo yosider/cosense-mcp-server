@@ -8,9 +8,12 @@ importers:
 
   .:
     dependencies:
+      '@core/unknownutil':
+        specifier: npm:@jsr/core__unknownutil@^4.4.0-pre.0
+        version: '@jsr/core__unknownutil@4.4.0-pre.1'
       '@cosense/std':
-        specifier: npm:@jsr/cosense__std@^0.29.14
-        version: '@jsr/cosense__std@0.29.16'
+        specifier: npm:@jsr/cosense__std@^0.30.0
+        version: '@jsr/cosense__std@0.30.2'
       '@modelcontextprotocol/sdk':
         specifier: ^1.17.1
         version: 1.17.5
@@ -25,8 +28,8 @@ importers:
         version: 3.25.76
     devDependencies:
       '@cosense/types':
-        specifier: npm:@jsr/cosense__types@^0.10.10
-        version: '@jsr/cosense__types@0.10.10'
+        specifier: npm:@jsr/cosense__types@^0.11.0
+        version: '@jsr/cosense__types@0.11.7'
       '@eslint/js':
         specifier: ^9.32.0
         version: 9.35.0
@@ -276,14 +279,17 @@ packages:
   '@jsr/core__unknownutil@4.3.0':
     resolution: {integrity: sha512-Rs+fY0+WX4pYG6B93M3/C9MVpE77Jlr69iYTC2PU+hTLOyu5CcwN17Og7titcWRoTdEJhFHYb4T5q+1bnEGZfQ==, tarball: https://npm.jsr.io/~/11/@jsr/core__unknownutil/4.3.0.tgz}
 
-  '@jsr/cosense__std@0.29.16':
-    resolution: {integrity: sha512-uClG5Nt5AEsxi3cpcFasZPXU9qnTmvFFUIn2jP1HyGDEECI+4E7/9DPXjoTfoVg1zkr87bOuvssZOv+Qe8R7kw==, tarball: https://npm.jsr.io/~/11/@jsr/cosense__std/0.29.16.tgz}
+  '@jsr/core__unknownutil@4.4.0-pre.1':
+    resolution: {integrity: sha512-al13EQTUm6z9gn13y5PyADkln1ACmPC1X+j70zLLps/6rZ5i2NBWVZw8cuh+YHbxLXXRiytrbtHS3hLeXIQvzg==, tarball: https://npm.jsr.io/~/11/@jsr/core__unknownutil/4.4.0-pre.1.tgz}
 
-  '@jsr/cosense__types@0.10.10':
-    resolution: {integrity: sha512-Fw64s7T/Z5kHqD5rTPegbIOii6078hWyh1GyqZWJkVo4MS8Ou/IMZSzrWEenN0RzZ0FmNUWMAAABtJ2xO6PFag==, tarball: https://npm.jsr.io/~/11/@jsr/cosense__types/0.10.10.tgz}
+  '@jsr/cosense__std@0.30.2':
+    resolution: {integrity: sha512-EFzXGIXqAx86O4ekLeLSmG/Lx4ytZRw9eo8ftnRKGXLIdeuTG6gsFWH5RXTOC4GT+ha/keqp8D264P/su4qg8Q==, tarball: https://npm.jsr.io/~/11/@jsr/cosense__std/0.30.2.tgz}
 
-  '@jsr/progfay__scrapbox-parser@9.2.0':
-    resolution: {integrity: sha512-KHx4GmLw6D0fG06RTFg5pzd5JI2oT/mee0mYRven7LisFTM+QtYmNs4ICTQaAcHtkSXO+QvTIInjBr8JcXTtbQ==, tarball: https://npm.jsr.io/~/11/@jsr/progfay__scrapbox-parser/9.2.0.tgz}
+  '@jsr/cosense__types@0.11.7':
+    resolution: {integrity: sha512-SPYTcw768YycC2hCG+sAeG3c8Fsotu0E7fN+2Q+thkzq4wJ9HldcBRV4ln1IE4m32ugAtdhxat7QXgHXPvK9ag==, tarball: https://npm.jsr.io/~/11/@jsr/cosense__types/0.11.7.tgz}
+
+  '@jsr/progfay__scrapbox-parser@10.1.1':
+    resolution: {integrity: sha512-xBtB64xW0aNSX1vM5FykbqeR2rzmY2ZHAOIMc+lj+ev4x9xrOkxnAGfViO4+qQcyiLkyeCbrsfSX4qdSNuT99g==, tarball: https://npm.jsr.io/~/11/@jsr/progfay__scrapbox-parser/10.1.1.tgz}
 
   '@jsr/std__assert@1.0.14':
     resolution: {integrity: sha512-BcjBimpxuy7mXjWo7sZ3TtPitx91w3UqssyY92RmJIuoMGYywZRGxaxqK9/oybljbZbZpPOSrkgQI9wKpgZ9vQ==, tarball: https://npm.jsr.io/~/11/@jsr/std__assert/1.0.14.tgz}
@@ -899,10 +905,6 @@ packages:
   once@1.4.0:
     resolution: {integrity: sha512-lNaJgI+2Q5URQBkccEKHTQOPaXdUxnZZElQTZY0MFUAuaEqe1E+Nyvgdz/aIyNi6Z9MzO5dv1H8n58/GELp3+w==}
 
-  option-t@51.1.1:
-    resolution: {integrity: sha512-Ww13j9NVqnGpxsaSr1y0o35Xq1WcopAeJkAbk9DWlKRBgFKYLuJwEU1GzWUtkhBhRQY0st5kfdtT02JO6YqEEw==}
-    engines: {node: '>=16.20.0'}
-
   option-t@53.0.0:
     resolution: {integrity: sha512-qsyo1cFXfUN1MVnxTrpcy+V4tJYEBvEQmeiDkC6m5W/V2JiNfs4V/qXmDGZg4k9XRR1EWkv3jT8TXSZnhGPBLA==}
     engines: {node: '>=16.20.0'}
@@ -1298,28 +1300,30 @@ snapshots:
 
   '@jsr/core__unknownutil@4.3.0': {}
 
-  '@jsr/cosense__std@0.29.16':
+  '@jsr/core__unknownutil@4.4.0-pre.1': {}
+
+  '@jsr/cosense__std@0.30.2':
     dependencies:
       '@jsr/core__iterutil': 0.9.0
       '@jsr/core__unknownutil': 4.3.0
-      '@jsr/cosense__types': 0.10.10
-      '@jsr/progfay__scrapbox-parser': 9.2.0
+      '@jsr/cosense__types': 0.11.7
+      '@jsr/progfay__scrapbox-parser': 10.1.1
       '@jsr/std__async': 1.0.14
       '@jsr/std__encoding': 1.0.10
       '@jsr/std__http': 1.0.20
       '@jsr/std__json': 1.0.2
       '@jsr/std__testing': 1.0.15
       '@jsr/takker__md5': 0.1.0
-      option-t: 51.1.1
+      option-t: 53.0.0
       socket.io-client: 4.8.1
     transitivePeerDependencies:
       - bufferutil
       - supports-color
       - utf-8-validate
 
-  '@jsr/cosense__types@0.10.10': {}
+  '@jsr/cosense__types@0.11.7': {}
 
-  '@jsr/progfay__scrapbox-parser@9.2.0': {}
+  '@jsr/progfay__scrapbox-parser@10.1.1': {}
 
   '@jsr/std__assert@1.0.14':
     dependencies:
@@ -2028,8 +2032,6 @@ snapshots:
   once@1.4.0:
     dependencies:
       wrappy: 1.0.2
-
-  option-t@51.1.1: {}
 
   option-t@53.0.0: {}
 
