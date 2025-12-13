@@ -11,43 +11,82 @@ The following tools are available for interacting with Cosense pages:
 - `search_pages`: Searches for pages containing the specified query string
 - `insert_lines`: Inserts text after a specified line in a page
 
-## MCP Client Configuration
+## Installation
 
-The following environment variables are required:
+### Prerequisites
 
-- `COSENSE_PROJECT_NAME`: Project name
-- `COSENSE_SID`: Session ID for authentication
-  - Required for writing to pages and reading private pages
-  - Handle with care as it contains sensitive information
-  - For more details, see [scrapboxlab/connect.sid](https://scrapbox.io/scrapboxlab/connect.sid)
-- `NODE_ENV`: Execution environment (`development` or `production`)
-  - Controls logging behavior
-  - In `development` mode, debug logs are displayed
-  - In `production` mode, debug logs are suppressed
+Set the following environment variables:
 
-### Run from npm registry
+- `COSENSE_PROJECT_NAME` — your Cosense project name.
+- `COSENSE_SID` — session cookie used for authentication. Required for writing pages and reading private pages. Treat this like a secret. See https://scrapbox.io/scrapboxlab/connect.sid for more details.
 
-#### JSR registry configuration
+### For VS Code Users
 
-This package depends on [@cosense/std](https://jsr.io/@cosense/std) and [@cosense/types](https://jsr.io/@cosense/types) which are hosted on JSR. Before using npx, you need to configure the JSR registry globally:
+Use one of these one-click installation buttons:
 
-For Linux/macOS:
+[![Install with pnpm in VS Code](https://img.shields.io/badge/VS_Code-pnpm-0098FF?style=flat-square&logo=visualstudiocode&logoColor=white)](vscode:mcp/install?%7B%22name%22%3A%22cosense-mcp-server%22%2C%22command%22%3A%22pnpm%22%2C%22args%22%3A%5B%22-s%22%2C%22dlx%22%2C%22%40yosider%2Fcosense-mcp-server%22%5D%2C%22env%22%3A%7B%22COSENSE_PROJECT_NAME%22%3A%22your_project_name%22%2C%22COSENSE_SID%22%3A%22your_sid%22%7D%7D) [![Install with pnpm in VS Code Insiders](https://img.shields.io/badge/VS_Code_Insiders-pnpm-24bfa5?style=flat-square&logo=visualstudiocode&logoColor=white)](vscode-insiders:mcp/install?%7B%22name%22%3A%22cosense-mcp-server%22%2C%22command%22%3A%22pnpm%22%2C%22args%22%3A%5B%22-s%22%2C%22dlx%22%2C%22%40yosider%2Fcosense-mcp-server%22%5D%2C%22env%22%3A%7B%22COSENSE_PROJECT_NAME%22%3A%22your_project_name%22%2C%22COSENSE_SID%22%3A%22your_sid%22%7D%7D)
+
+[![Install with yarn in VS Code](https://img.shields.io/badge/VS_Code-yarn-0098FF?style=flat-square&logo=visualstudiocode&logoColor=white)](vscode:mcp/install?%7B%22name%22%3A%22cosense-mcp-server%22%2C%22command%22%3A%22yarn%22%2C%22args%22%3A%5B%22dlx%22%2C%22-q%22%2C%22%40yosider%2Fcosense-mcp-server%22%5D%2C%22env%22%3A%7B%22COSENSE_PROJECT_NAME%22%3A%22your_project_name%22%2C%22COSENSE_SID%22%3A%22your_sid%22%7D%7D) [![Install with yarn in VS Code Insiders](https://img.shields.io/badge/VS_Code_Insiders-yarn-24bfa5?style=flat-square&logo=visualstudiocode&logoColor=white)](vscode-insiders:mcp/install?%7B%22name%22%3A%22cosense-mcp-server%22%2C%22command%22%3A%22yarn%22%2C%22args%22%3A%5B%22dlx%22%2C%22-q%22%2C%22%40yosider%2Fcosense-mcp-server%22%5D%2C%22env%22%3A%7B%22COSENSE_PROJECT_NAME%22%3A%22your_project_name%22%2C%22COSENSE_SID%22%3A%22your_sid%22%7D%7D)
+
+> **Note**: After clicking the button, replace `your_project_name` and `your_sid` with your actual values in the configuration. For manual setup, you can also edit [`.vscode/mcp.json`](.vscode/mcp.json) directly.
+
+### For Claude Desktop Users
+
+Add one of the following configurations to your `claude_desktop_config.json`:
+
+#### Using pnpm
+
+```json
+{
+  "mcpServers": {
+    "cosense-mcp-server": {
+      "command": "pnpm",
+      "args": ["-s", "dlx", "@yosider/cosense-mcp-server"],
+      "env": {
+        "COSENSE_PROJECT_NAME": "your_project_name",
+        "COSENSE_SID": "your_sid"
+      }
+    }
+  }
+}
+```
+
+#### Using yarn
+
+```json
+{
+  "mcpServers": {
+    "cosense-mcp-server": {
+      "command": "yarn",
+      "args": ["dlx", "-q", "@yosider/cosense-mcp-server"],
+      "env": {
+        "COSENSE_PROJECT_NAME": "your_project_name",
+        "COSENSE_SID": "your_sid"
+      }
+    }
+  }
+}
+```
+
+#### Using npx
+
+This package depends on JSR-hosted packages. `npx` requires adding the JSR registry to `~/.npmrc` first.
+
+**Step 1: Add JSR registry to `~/.npmrc`**
+
+Linux/macOS:
 
 ```bash
 echo "@jsr:registry=https://npm.jsr.io" >> ~/.npmrc
 ```
 
-For Windows (PowerShell):
+Windows (PowerShell):
 
 ```powershell
-echo "@jsr:registry=https://npm.jsr.io" >> $env:USERPROFILE\.npmrc
+echo "@jsr:registry=https://npm.jsr.io" >> $env:USERPROFILE\\.npmrc
 ```
 
-Or if you prefer not to modify global settings, run from source instead (see the section below)
-
-#### Client json configuration
-
-After configuring JSR registry, configure your MCP client:
+**Step 2: Add configuration**
 
 ```json
 {
@@ -64,25 +103,27 @@ After configuring JSR registry, configure your MCP client:
 }
 ```
 
-### Run from source
+## Development
 
-#### Clone and build
+### Running from Source
+
+If you prefer to run the server from a local copy of this repository, build it first:
 
 ```bash
 git clone https://github.com/yosider/cosense-mcp-server.git
 cd cosense-mcp-server
-npm install
-npm run build
+pnpm install
+pnpm run build
 ```
 
-#### Client json configuration
+Then configure your MCP client to use the local build:
 
 ```json
 {
   "mcpServers": {
     "cosense-mcp-server": {
-      "command": "npx",
-      "args": ["-y", "/path/to/cosense-mcp-server"],
+      "command": "node",
+      "args": ["/path/to/cosense-mcp-server/build/index.js"],
       "env": {
         "COSENSE_PROJECT_NAME": "your_project_name",
         "COSENSE_SID": "your_sid"
@@ -92,14 +133,12 @@ npm run build
 }
 ```
 
-For development debugging, add `"NODE_ENV": "development"` to the `env` section. Note that setting environment variables in a `.env` file won't work due to execution timing - use the MCP client configuration instead.
-
-### Debugging
+## Debugging
 
 Since MCP servers communicate over stdio, debugging can be challenging. We recommend using the [MCP Inspector](https://github.com/modelcontextprotocol/inspector), which is available as a package script:
 
 ```bash
-npm run inspect
+pnpm run inspect
 ```
 
 The Inspector will provide a URL to access debugging tools in your browser.

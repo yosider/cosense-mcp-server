@@ -1,8 +1,6 @@
-import type { Page, PageSummery } from '@cosense/types/rest';
-import { logger } from './utils/logger.js';
+import type { Page, PageSummary } from '@cosense/types/rest';
 
 export function pageToText(page: Page): string {
-  logger.log(page.relatedPages);
   const text = `
 ${page.lines.map((line) => line.text).join('\n')}
 
@@ -19,7 +17,7 @@ ${page.relatedPages.projectLinks1hop.map((page) => page.title).join('\n')}
   return text;
 }
 
-export function generateDescription(page: PageSummery): string {
+export function generateDescription(page: PageSummary): string {
   return [
     `Title: ${page.title}`,
     `Description:`,
