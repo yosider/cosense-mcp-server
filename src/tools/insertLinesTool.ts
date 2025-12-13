@@ -8,7 +8,8 @@ export const registerInsertLinesTool = (server: McpServer, config: Config) =>
   server.registerTool(
     'insert_lines',
     {
-      description: 'Insert lines after the specified target line in a Cosense page. If the target line is not found, append to the end of the page.',
+      description:
+        'Insert lines after the specified target line in a Cosense page. If the target line is not found, append to the end of the page.',
       inputSchema: {
         title: z.string().describe('Title of the page to modify'),
         targetLineText: z

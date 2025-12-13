@@ -10,7 +10,8 @@ export const registerGetPageTool = (server: McpServer, config: Config) =>
   server.registerTool(
     'get_page',
     {
-      description: 'Get a page with the specified title from the Cosense project.',
+      description:
+        'Get a page with the specified title from the Cosense project.',
       inputSchema: {
         title: z.string().describe('Title of the page'),
       },

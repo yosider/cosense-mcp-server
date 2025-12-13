@@ -9,7 +9,8 @@ export const registerSearchPagesTool = (server: McpServer, config: Config) =>
   server.registerTool(
     'search_pages',
     {
-      description: 'Search for pages containing the specified query string in the Cosense project.',
+      description:
+        'Search for pages containing the specified query string in the Cosense project.',
       inputSchema: {
         query: z.string().describe('Search query string (space separated)'),
       },
