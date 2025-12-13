@@ -13,9 +13,7 @@ The following tools are available for interacting with Cosense pages:
 
 ## Configuration
 
-### Using `pnpm`/`yarn` (Recommended)
-
-#### Usage with VS Code
+### Usage with VS Code
 
 For quick installation, use one of these one-click buttons.
 
@@ -25,7 +23,7 @@ For quick installation, use one of these one-click buttons.
 
 For manual installation, refer to [the next section](#usage-with-claude-desktop).
 
-#### Usage with Claude Desktop
+### Usage with Claude Desktop
 
 Add the following to your `claude_desktop_config.json`.
 
