@@ -24,7 +24,7 @@ export const registerSetLoggingLevel = (server: Server) => {
     server.assertCanSetRequestHandler(method);
     server.setRequestHandler(SetLevelRequestSchema, (request) => {
       logLevel = request.params.level;
-      return { success: true };
+      return {};
     });
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (_) {

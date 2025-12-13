@@ -27,7 +27,7 @@
     "format:check": "prettier --check \"src/**/*.ts\"",
     "start": "tsx src/index.ts",
     "start:dev": "tsx watch src/index.ts",
-    "inspect": "npx @modelcontextprotocol/inspector -- tsx src/index.ts"
+    "inspect": "npx -y @modelcontextprotocol/inspector@latest -- tsx src/index.ts"
   },
   "dependencies": {
     "@core/unknownutil": "npm:@jsr/core__unknownutil@^4.4.0-pre.0",
