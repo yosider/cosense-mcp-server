@@ -122,7 +122,8 @@ Then configure your MCP client to use the local build:
 {
   "mcpServers": {
     "cosense-mcp-server": {
-      "command": "/path/to/cosense-mcp-server/build/index.js",
+      "command": "node",
+      "args": ["/path/to/cosense-mcp-server/build/index.js"],
       "env": {
         "COSENSE_PROJECT_NAME": "your_project_name",
         "COSENSE_SID": "your_sid"
