@@ -6,11 +6,14 @@ import { z } from 'zod';
 import type { Config } from '../config.js';
 
 export const registerSearchPagesTool = (server: McpServer, config: Config) =>
-  server.tool(
+  server.registerTool(
     'search_pages',
-    'Search for pages containing the specified query string in the Cosense project.',
     {
-      query: z.string().describe('Search query string (space separated)'),
+      description:
+        'Search for pages containing the specified query string in the Cosense project.',
+      inputSchema: {
+        query: z.string().describe('Search query string (space separated)'),
+      },
     },
     async ({ query }) => {
       const cosenseOptions = {
